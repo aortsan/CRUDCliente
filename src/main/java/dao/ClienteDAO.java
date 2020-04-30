@@ -204,7 +204,7 @@ public class ClienteDAO {
         }
 
         try {
-            String sql = "DELETE FROM clientes WHERE codigoempleado = ?";
+            String sql = "DELETE FROM clientes WHERE id = ?";
             stmt = conexion.prepareStatement(sql);
             stmt.setInt(1, idCliente);
 
