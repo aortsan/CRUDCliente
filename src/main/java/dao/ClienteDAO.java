@@ -164,7 +164,7 @@ public class ClienteDAO {
 
         try {
 
-            String sql = "UPDATE empleados SET " + campo + "=? WHERE codigoempleado = ?";
+            String sql = "UPDATE clientes SET " + campo + "=? WHERE id = ?";
 
             stmt = conexion.prepareStatement(sql);
             stmt.setString(1, campo);
@@ -204,7 +204,7 @@ public class ClienteDAO {
         }
 
         try {
-            String sql = "DELETE FROM empleados WHERE codigoempleado = ?";
+            String sql = "DELETE FROM clientes WHERE codigoempleado = ?";
             stmt = conexion.prepareStatement(sql);
             stmt.setInt(1, idCliente);
 
