@@ -50,7 +50,7 @@ public class ClienteDAO {
         }
 
         try {
-            String query = "SELECT * FROM empleados WHERE codigoempleado = ?";
+            String query = "SELECT * FROM clientes WHERE id = ?";
             stmt = conexion.prepareStatement(query);
             stmt.setInt(1, idCliente);
 

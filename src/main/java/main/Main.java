@@ -159,7 +159,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         Integer opcion;
 
-        System.out.println("\nIndique el campo que desea modificar: \n");
+        System.out.println("Indique el campo que desea modificar: \n");
         System.out.println("  1.  Código del cliente\n"
                 + "  2.  Empresa\n"
                 + "  3.  Contacto\n"
@@ -171,7 +171,7 @@ public class Main {
                 + "  9.  País\n"
                 + "  10. Teléfono\n"
                 + "  11. Fax");
-        System.out.print("\nSu opción: ");
+        System.out.print("Su opción: ");
         opcion = Integer.parseInt(sc.nextLine());
 
         switch (opcion) {
@@ -222,7 +222,9 @@ public class Main {
             System.out.print("Indique el nuevo valor del campo: ");
             valorCampo = sc.nextLine();
 
-            clientes.update(cliente.getIdCliente(), campo, valorCampo);
+            if (clientes.update(cliente.getIdCliente(), campo, valorCampo)){
+                System.out.println("Registro modificado.");
+            }
         } else {
             System.err.println("El empleado no existe o no se puede leer.");
         }
@@ -237,6 +239,9 @@ public class Main {
 
         Scanner sc = new Scanner(System.in, "ISO-8859-1");
         Cliente cliente = new Cliente();
+        
+        System.out.print("Indique el código de la empresa: ");
+        cliente.setCodigoCliente(sc.nextLine());
 
         System.out.print("Indique el nombre de la empresa: ");
         cliente.setEmpresa(sc.nextLine());
@@ -288,15 +293,15 @@ public class Main {
 
         if (cliente != null) {
             System.out.println("\n¿Está seguro que desea eliminar al siguiente usuario?"
-                    + "\n  " + cliente);
+                    + "\n\n\t" + cliente + "\n");
             System.out.print("Su respuesta [Y/N]: ");
             resp = sc.nextLine();
 
             if (resp.equalsIgnoreCase("y")) {
                 clientes.delete(cliente.getIdCliente());
-                System.out.println("Entrada eliminada.");
+                System.out.println("\n\tEntrada eliminada.");
             } else {
-                System.out.println("Entrada no eliminada.");
+                System.out.println("\n\tEntrada no eliminada.");
             }
         } else {
             System.err.println("El empleado no existe o no se puede leer.");
@@ -307,7 +312,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         Cliente cliente;
 
-        System.out.print("Indique el ID del empleado que desea buscar: ");
+        System.out.print("\nIndique el ID del empleado que desea buscar: ");
         cliente = clientes.read(Integer.parseInt(sc.nextLine()));
 
         return cliente;
