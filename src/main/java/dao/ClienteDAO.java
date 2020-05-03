@@ -35,7 +35,59 @@ public class ClienteDAO {
     public Connection getConexion() {
         return conexion;
     }
+    
+    /**
+     * Búsqueda de un único cliente para comprobar posteriormente si existe
+     * @param idCliente
+     * @return 
+     */
+    public Cliente read(Integer idCliente) {
+        Cliente cliente = null;
+        PreparedStatement stmt = null;
 
+        if (this.conexion == null) {
+            return null;
+        }
+
+        try {
+            String query = "SELECT * FROM empleados WHERE codigoempleado = ?";
+            stmt = conexion.prepareStatement(query);
+            stmt.setInt(1, idCliente);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                cliente = new Cliente(
+                        rs.getInt("id"),
+                        rs.getString("codigo"),
+                        rs.getString("empresa"),
+                        rs.getString("contacto"),
+                        rs.getString("cargo_contacto"),
+                        rs.getString("direccion"),
+                        rs.getString("ciudad"),
+                        rs.getString("region"),
+                        rs.getString("cp"),
+                        rs.getString("pais"),
+                        rs.getString("telefono"),
+                        rs.getString("fax")
+                );
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error en el Select: " + e.getMessage());
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error en el Select: " + ex.getMessage());
+            }
+        }
+
+        return cliente;
+    }
+    
     /**
      * Listar la base de datos mediante los siguientes parámetros:
      *
@@ -46,7 +98,7 @@ public class ClienteDAO {
      */
     public ArrayList<Cliente> listar(String orden, Integer inicio, Integer limite) {
         ArrayList<Cliente> listaClientes = new ArrayList<>();
-        PreparedStatement stm = null;
+        PreparedStatement stmt = null;
 
         if (this.conexion == null || orden == null || inicio == null || limite == null) {
             return listaClientes;
@@ -55,11 +107,11 @@ public class ClienteDAO {
         try {
             String query = "SELECT * FROM clientes ORDER BY " + orden + " LIMIT ? OFFSET ?";
 
-            stm = conexion.prepareStatement(query);
-            stm.setInt(1, limite);
-            stm.setInt(2, inicio);
+            stmt = conexion.prepareStatement(query);
+            stmt.setInt(1, limite);
+            stmt.setInt(2, inicio);
 
-            ResultSet rs = stm.executeQuery();
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Cliente cliente = new Cliente(
@@ -80,11 +132,11 @@ public class ClienteDAO {
             }
 
         } catch (SQLException ex) {
-            System.err.println("Error al listar: " + ex.getMessage() + " " + stm.toString());
+            System.err.println("Error al listar: " + ex.getMessage());
         } finally {
             try {
-                if (stm != null) {
-                    stm.close();
+                if (stmt != null) {
+                    stmt.close();
                 }
             } catch (SQLException ex) {
                 System.err.println("Error al cerrar la conexión: " + ex.getMessage());
@@ -102,7 +154,7 @@ public class ClienteDAO {
      */
     public Boolean insertar(Cliente cliente) {
         Boolean resultado = false;
-        PreparedStatement stm = null;
+        PreparedStatement stmt = null;
 
         if (this.conexion == null) {
             return resultado;
@@ -113,20 +165,20 @@ public class ClienteDAO {
                     + "(id, codigo, empresa, contacto, cargo_contacto, direccion, ciudad, region, cp, pais, telefono, fax) "
                     + "VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            stm = conexion.prepareStatement(query);
-            stm.setString(1, cliente.getCodigoCliente());
-            stm.setString(2, cliente.getEmpresa());
-            stm.setString(3, cliente.getContacto());
-            stm.setString(4, cliente.getCargoContacto());
-            stm.setString(5, cliente.getDireccion());
-            stm.setString(6, cliente.getCiudad());
-            stm.setString(7, cliente.getRegion());
-            stm.setString(8, cliente.getCodigoPostal());
-            stm.setString(9, cliente.getPais());
-            stm.setString(10, cliente.getTelefono());
-            stm.setString(11, cliente.getTelefono());
+            stmt = conexion.prepareStatement(query);
+            stmt.setString(1, cliente.getCodigoCliente());
+            stmt.setString(2, cliente.getEmpresa());
+            stmt.setString(3, cliente.getContacto());
+            stmt.setString(4, cliente.getCargoContacto());
+            stmt.setString(5, cliente.getDireccion());
+            stmt.setString(6, cliente.getCiudad());
+            stmt.setString(7, cliente.getRegion());
+            stmt.setString(8, cliente.getCodigoPostal());
+            stmt.setString(9, cliente.getPais());
+            stmt.setString(10, cliente.getTelefono());
+            stmt.setString(11, cliente.getTelefono());
 
-            if (stm.executeUpdate() > 0) {
+            if (stmt.executeUpdate() > 0) {
                 resultado = true;
 
             }
@@ -135,11 +187,11 @@ public class ClienteDAO {
             System.err.println("Error al insertar: " + ex.getMessage());
         } finally {
             try {
-                if (stm != null) {
-                    stm.close();
+                if (stmt != null) {
+                    stmt.close();
                 }
             } catch (SQLException ex) {
-                System.err.println("Error al cerrar la conexión: " + ex.getMessage() + " " + stm.toString());
+                System.err.println("Error al cerrar la conexión: " + ex.getMessage());
             }
         }
 
@@ -152,9 +204,10 @@ public class ClienteDAO {
      *
      * @param id
      * @param campo
+     * @param valorCampo
      * @return
      */
-    public Boolean update(Integer id, String campo) {
+    public Boolean update(Integer id, String campo, String valorCampo) {
         Boolean resultado = null;
         PreparedStatement stmt = null;
 
@@ -167,7 +220,7 @@ public class ClienteDAO {
             String sql = "UPDATE clientes SET " + campo + "=? WHERE id = ?";
 
             stmt = conexion.prepareStatement(sql);
-            stmt.setString(1, campo);
+            stmt.setString(1, valorCampo);
             stmt.setInt(2, id);
 
             if (stmt.executeUpdate() > 0) {
