@@ -75,12 +75,11 @@ public class ClienteDAOTest {
     @Test
     public void testListar() {
         System.out.println("listar");
-        String orden = "";
         Integer inicio = null;
         Integer limite = null;
         ClienteDAO instance = new ClienteDAO();
         ArrayList<Cliente> expResult = null;
-        ArrayList<Cliente> result = instance.listar(orden, inicio, limite);
+        ArrayList<Cliente> result = instance.listar(inicio, limite);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

@@ -96,17 +96,20 @@ public class ClienteDAO {
      * @param limite
      * @return
      */
-    public ArrayList<Cliente> listar(String orden, Integer inicio, Integer limite) {
+    //public ArrayList<Cliente> listar(String orden, Integer inicio, Integer limite) {
+    public ArrayList<Cliente> listar(Integer inicio, Integer limite) {
         ArrayList<Cliente> listaClientes = new ArrayList<>();
         PreparedStatement stmt = null;
 
-        if (this.conexion == null || orden == null || inicio == null || limite == null) {
+        //if (this.conexion == null || orden == null || inicio == null || limite == null) {
+        if (this.conexion == null || inicio == null || limite == null) {
             return listaClientes;
         }
-
+        
         try {
-            String query = "SELECT * FROM clientes ORDER BY " + orden + " LIMIT ? OFFSET ?";
-
+            //String query = "SELECT * FROM clientes ORDER BY "  + " LIMIT ? OFFSET ?";
+            String query = "SELECT * FROM clientes ORDER BY id LIMIT ? OFFSET ?";
+                    
             stmt = conexion.prepareStatement(query);
             stmt.setInt(1, limite);
             stmt.setInt(2, inicio);
@@ -156,7 +159,7 @@ public class ClienteDAO {
         Boolean resultado = false;
         PreparedStatement stmt = null;
 
-        if (this.conexion == null) {
+        if (this.conexion == null || cliente.isBlank()) {
             return resultado;
         }
 

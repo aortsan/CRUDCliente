@@ -35,9 +35,12 @@ public class Main {
 
         System.out.println("\t\tBIENVENIDO");
         System.out.println("\t\t-----------");
+
+        listado(inicio, limite);
+
         while (true) {
             try {
-                System.out.println("ELIJA ALGUNA DE LAS OPCIONES QUE SE MUESTRAN A CONTINUACIÓN\n");
+                System.out.println("\nELIJA ALGUNA DE LAS OPCIONES QUE SE MUESTRAN A CONTINUACIÓN\n");
                 System.out.println("  1. Visualizar los diez siguientes.");
                 System.out.println("  2. Visualizar los diez siguientes.");
                 System.out.println("  3. Introducir nuevo registro.");
@@ -54,10 +57,16 @@ public class Main {
                         System.exit(0);
                         break;
                     case 1:
-                        listarClientes();
+                        inicio += 10;
+                        listado(inicio, limite);
                         break;
                     case 2:
-                        listarClientes();
+                        if (inicio <= 0) {
+                            inicio = 0;
+                        } else {
+                            inicio -= 10;
+                        }
+                        listado(inicio, limite);
                         break;
                     case 3:
                         introducirCliente();
@@ -78,80 +87,149 @@ public class Main {
         }
     }
 
-    public static void listarClientes() {
-        Scanner sc = new Scanner(System.in);
-        Integer opcion;
-
-        System.out.println("\nIndique según que orden quiere listar: \n");
-        System.out.println("  1.  Id del cliente\n"
-                + "  2.  Código del cliente\n"
-                + "  3.  Empresa\n"
-                + "  4.  Contacto\n"
-                + "  5.  Cargo del contacto\n"
-                + "  6.  Dirección\n"
-                + "  7.  Ciudad\n"
-                + "  8.  Región\n"
-                + "  9.  Código postal\n"
-                + "  10. País\n"
-                + "  11. Teléfono\n"
-                + "  12. Fax");
-        System.out.print("\nSu opción: ");
-        opcion = Integer.parseInt(sc.nextLine());
-        System.out.println();
-        switch (opcion) {
-            case 1:
-                listado("id");
-                break;
-            case 2:
-                listado("codigo");
-                break;
-            case 3:
-                listado("empresa");
-                break;
-            case 4:
-                listado("contacto");
-                break;
-            case 5:
-                listado("cargo_contacto");
-                break;
-            case 6:
-                listado("direccion");
-                break;
-            case 7:
-                listado("ciudad");
-                break;
-            case 8:
-                listado("region");
-                break;
-            case 9:
-                listado("cp");
-                break;
-            case 10:
-                listado("pais");
-                break;
-            case 11:
-                listado("telefono");
-                break;
-            case 12:
-                listado("fax");
-                break;
-            default:
-                System.out.println("Debe elegir una opción válida.");
-        }
-    }
-
-    public static void listado(String orden) {
+    /**
+     * Listar los clientes
+     *
+     * @param inicio
+     * @param limite
+     */
+//    public static void listarClientes() {
+//        Scanner sc = new Scanner(System.in);
+//        Integer opcion;
+//
+//        System.out.println("\nIndique según que orden quiere listar: \n");
+//        System.out.println("  1.  Id del cliente\n"
+//                + "  2.  Código del cliente\n"
+//                + "  3.  Empresa\n"
+//                + "  4.  Contacto\n"
+//                + "  5.  Cargo del contacto\n"
+//                + "  6.  Dirección\n"
+//                + "  7.  Ciudad\n"
+//                + "  8.  Región\n"
+//                + "  9.  Código postal\n"
+//                + "  10. País\n"
+//                + "  11. Teléfono\n"
+//                + "  12. Fax");
+//        System.out.print("\nSu opción: ");
+//        opcion = Integer.parseInt(sc.nextLine());
+//        System.out.println();
+//        switch (opcion) {
+//            case 1:
+//                listado("id");
+//                break;
+//            case 2:
+//                listado("codigo");
+//                break;
+//            case 3:
+//                listado("empresa");
+//                break;
+//            case 4:
+//                listado("contacto");
+//                break;
+//            case 5:
+//                listado("cargo_contacto");
+//                break;
+//            case 6:
+//                listado("direccion");
+//                break;
+//            case 7:
+//                listado("ciudad");
+//                break;
+//            case 8:
+//                listado("region");
+//                break;
+//            case 9:
+//                listado("cp");
+//                break;
+//            case 10:
+//                listado("pais");
+//                break;
+//            case 11:
+//                listado("telefono");
+//                break;
+//            case 12:
+//                listado("fax");
+//                break;
+//            default:
+//                System.out.println("Debe elegir una opción válida.");
+//        }
+//    }
+    public static void listado(Integer inicio, Integer limite) {
         System.out.println("\nLISTADO");
         System.out.println("--------");
-        System.out.println("+----------+----------------------------------------+--------------------+------------------------------+");
-        System.out.printf("|%-10s|%-40s|%-20s|%-30s|%n", "Id", "Empresa", "Contacto", "Cargo");
-        listaClientes = clientes.listar(orden, 0, 10);
+        System.out.println("+-----+-------+-------------------------------------+-------------------------+------------------------------"
+                + "+------------------------------------------------+---------------+---------------+----------+---------------+---------------+"
+                + "---------------+");
+        System.out.printf("|%-5s|%-7s|%-37s|%-25s|%-30s|%-48s|%-15s|%-15s|%-10s|%-15s|%-15s|%-15s|%n",
+                "Id", "Código", "Empresa", "Contacto", "Cargo", "Dirección", "Ciudad", "Región", "C.Postal", "País", "Teléfono", "Fax");
+//        listaClientes = clientes.listar(orden, 0, 10);
+        listaClientes = clientes.listar(inicio, limite);
+
         for (Cliente c : listaClientes) {
-            System.out.printf("|%10d|%40s|%20s|%30s|%n", c.getIdCliente(), c.getEmpresa(), c.getContacto(), c.getCargoContacto());
+            System.out.printf("|%5d|%7s|%37s|%25s|%30s|%48s|%15s|%15s|%10s|%15s|%15s|%15s|%n",
+                    c.getIdCliente(), c.getCodigoCliente(), c.getEmpresa(),
+                    c.getContacto(), c.getCargoContacto(), c.getDireccion(), c.getCiudad(), c.getRegion(),
+                    c.getCodigoPostal(), c.getPais(), c.getTelefono(), c.getFax());
         }
-        System.out.println("+----------+----------------------------------------+--------------------+------------------------------+");
+        System.out.println("+-----+-------+-------------------------------------+-------------------------+------------------------------"
+                + "+------------------------------------------------+---------------+---------------+----------+---------------+---------------+"
+                + "---------------+");
     }
 
+    /**
+     * Insertar un cliente nuevo
+     */
+    public static void introducirCliente() {
+        System.out.println("\nINSERTAR");
+        System.out.println("--------");
+
+        Scanner sc = new Scanner(System.in, "ISO-8859-1");
+        Cliente cliente = new Cliente();
+
+        System.out.print("Indique el código de la empresa: ");
+        cliente.setCodigoCliente(sc.nextLine());
+
+        System.out.print("Indique el nombre de la empresa: ");
+        cliente.setEmpresa(sc.nextLine());
+
+        System.out.print("Indique el nombre del contacto: ");
+        cliente.setContacto(sc.nextLine());
+
+        System.out.print("Indique el cargo del contacto: ");
+        cliente.setCargoContacto(sc.nextLine());
+
+        System.out.print("Indique la dirección de la empresa: ");
+        cliente.setDireccion(sc.nextLine());
+
+        System.out.print("Indique la ciudad en la que se encuentra la empresa: ");
+        cliente.setCiudad(sc.nextLine());
+
+        System.out.print("Indique la región en la que se encuentra la empresa: ");
+        cliente.setRegion(sc.nextLine());
+
+        System.out.print("Indique el código postal de la empresa: ");
+        cliente.setCodigoPostal(sc.nextLine());
+
+        System.out.print("Indique el país de la empresa: ");
+        cliente.setPais(sc.nextLine());
+
+        System.out.print("Indique el teléfono de la empresa: ");
+        cliente.setTelefono(sc.nextLine());
+
+        System.out.print("Indique el fax de la empresa: ");
+        cliente.setFax(sc.nextLine());
+
+        if (clientes.insertar(cliente)) {
+            System.out.println("\nEl cliente '" + cliente.getEmpresa() + "' ha sido añadido satisfactoriamente.");
+        } else {
+            System.err.println("\nEl empleado que intenta introducir no es válido.");
+        }
+    }
+
+    /**
+     * Actualizar un cliente donde se ha de escoger el campo que se desea
+     * modificar
+     */
     public static void menuActualizar() {
         System.out.println("\nACTUALIZAR");
         System.out.println("----------");
@@ -222,61 +300,11 @@ public class Main {
             System.out.print("Indique el nuevo valor del campo: ");
             valorCampo = sc.nextLine();
 
-            if (clientes.update(cliente.getIdCliente(), campo, valorCampo)){
+            if (clientes.update(cliente.getIdCliente(), campo, valorCampo)) {
                 System.out.println("Registro modificado.");
             }
         } else {
             System.err.println("El empleado no existe o no se puede leer.");
-        }
-    }
-
-    /**
-     * Insertar un cliente nuevo
-     */
-    public static void introducirCliente() {
-        System.out.println("\nINSERTAR");
-        System.out.println("--------");
-
-        Scanner sc = new Scanner(System.in, "ISO-8859-1");
-        Cliente cliente = new Cliente();
-        
-        System.out.print("Indique el código de la empresa: ");
-        cliente.setCodigoCliente(sc.nextLine());
-
-        System.out.print("Indique el nombre de la empresa: ");
-        cliente.setEmpresa(sc.nextLine());
-
-        System.out.print("Indique el nombre del contacto: ");
-        cliente.setContacto(sc.nextLine());
-
-        System.out.print("Indique el cargo del contacto: ");
-        cliente.setCargoContacto(sc.nextLine());
-
-        System.out.print("Indique la dirección de la empresa: ");
-        cliente.setDireccion(sc.nextLine());
-
-        System.out.print("Indique la ciudad en la que se encuentra la empresa: ");
-        cliente.setCiudad(sc.nextLine());
-
-        System.out.print("Indique la región en la que se encuentra la empresa: ");
-        cliente.setRegion(sc.nextLine());
-
-        System.out.print("Indique el código postal de la empresa: ");
-        cliente.setCodigoPostal(sc.nextLine());
-
-        System.out.print("Indique el país de la empresa: ");
-        cliente.setPais(sc.nextLine());
-
-        System.out.print("Indique el teléfono de la empresa: ");
-        cliente.setTelefono(sc.nextLine());
-
-        System.out.print("Indique el fax de la empresa: ");
-        cliente.setFax(sc.nextLine());
-
-        if (clientes.insertar(cliente)) {
-            System.out.println("El cliente '" + cliente.getEmpresa() + "' ha sido añadido satisfactoriamente.");
-        } else {
-            System.err.println("El empleado que intenta introducir no es válido.\n");
         }
     }
 
