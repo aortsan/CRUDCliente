@@ -21,12 +21,12 @@ public class Main {
      */
     static ArrayList<Cliente> listaClientes = null;
     static ClienteDAO clientes = new ClienteDAO();
+    static Integer inicio = 0;
+    static Integer limite = 10;
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Integer opcion;
-        Integer inicio = 0;
-        Integer limite = 10;
 
         if (clientes.getConexion() == null) {
             System.err.println("Programa terminado. Error en la conexión.");
@@ -57,16 +57,10 @@ public class Main {
                         System.exit(0);
                         break;
                     case 1:
-                        inicio += 10;
-                        listado(inicio, limite);
+                        siguiente();
                         break;
                     case 2:
-                        if (inicio <= 0) {
-                            inicio = 0;
-                        } else {
-                            inicio -= 10;
-                        }
-                        listado(inicio, limite);
+                        anterior();
                         break;
                     case 3:
                         introducirCliente();
@@ -154,6 +148,25 @@ public class Main {
 //                System.out.println("Debe elegir una opción válida.");
 //        }
 //    }
+    public static void siguiente() {
+        Integer maxPaginas = ((clientes.idMAX()) / 10);
+        if ((maxPaginas - 1) < (inicio / 10)) {
+            inicio = maxPaginas * 10;
+        } else {
+            inicio += 10;
+        }
+        listado(inicio, limite);
+    }
+
+    public static void anterior() {
+        if (inicio <= 0) {
+            inicio = 0;
+        } else {
+            inicio -= 10;
+        }
+        listado(inicio, limite);
+    }
+
     public static void listado(Integer inicio, Integer limite) {
         System.out.println("\nLISTADO");
         System.out.println("--------");

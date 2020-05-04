@@ -106,7 +106,7 @@ public class ClienteDAO {
             return listaClientes;
         }
         
-        try {
+        try {        
             //String query = "SELECT * FROM clientes ORDER BY "  + " LIMIT ? OFFSET ?";
             String query = "SELECT * FROM clientes ORDER BY id LIMIT ? OFFSET ?";
                     
@@ -148,7 +148,40 @@ public class ClienteDAO {
 
         return listaClientes;
     }
+    
+    public Integer idMAX() {
+        PreparedStatement stmt = null;
+        Integer ultimoId = null;
+        
+        if (this.conexion == null) {
+            return null;
+        }
 
+        try {
+            String query = "SELECT MAX(id) FROM clientes";
+            stmt = conexion.prepareStatement(query);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                ultimoId = rs.getInt("MAX(id)");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error en el Select: " + e.getMessage());
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error en el Select: " + ex.getMessage());
+            }
+        }
+
+        return ultimoId;
+    }
+    
     /**
      * Insertar un cliente
      *
