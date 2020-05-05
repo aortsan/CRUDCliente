@@ -191,7 +191,7 @@ public class ClienteDAO {
     public Boolean insertar(Cliente cliente) {
         Boolean resultado = false;
         PreparedStatement stmt = null;
-
+        
         if (this.conexion == null || cliente.isBlank()) {
             return resultado;
         }

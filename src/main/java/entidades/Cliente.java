@@ -255,16 +255,16 @@ public class Cliente {
      */
     public Boolean isBlank() {
         return this.codigoCliente.isBlank() 
-                && this.empresa.isBlank() 
-                && this.contacto.isBlank()
-                && this.cargoContacto.isBlank() 
-                && this.direccion.isBlank() 
-                && this.ciudad.isBlank()
-                && this.region.isBlank()
-                && this.codigoPostal.isBlank()
-                && this.pais.isBlank()
-                && this.telefono.isBlank()
-                && this.fax.isBlank();
+                || this.empresa.isBlank() 
+                || this.contacto.isBlank()
+                || this.cargoContacto.isBlank() 
+                || this.direccion.isBlank() 
+                || this.ciudad.isBlank()
+                || this.region.isBlank()
+                || this.codigoPostal.isBlank()
+                || this.pais.isBlank()
+                || this.telefono.isBlank()
+                || this.fax.isBlank();
     }
 
     @Override
