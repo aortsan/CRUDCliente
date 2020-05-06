@@ -20,10 +20,12 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Integer opcion;
-
+        
+        Utilidad.conexion();
+        
         System.out.println("\t\tBIENVENIDO");
         System.out.println("\t\t-----------");
-
+        
         Utilidad.listado();
 
         while (true) {
