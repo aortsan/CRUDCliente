@@ -250,7 +250,7 @@ public class Cliente {
     }
     
     /**
-     * Comprobar si el objeto está completamente vacío
+     * Comprobar si los campos clave están vacíos
      * @return true si está vacío
      */
     public Boolean isBlank() {
@@ -260,13 +260,37 @@ public class Cliente {
                 || this.cargoContacto.isBlank() 
                 || this.direccion.isBlank() 
                 || this.ciudad.isBlank()
-                || this.region.isBlank()
-                || this.codigoPostal.isBlank()
                 || this.pais.isBlank()
-                || this.telefono.isBlank()
-                || this.fax.isBlank();
+                || this.telefono.isBlank();
     }
-
+    /**
+     * Todo aquel campo atributo cuyo valor contenga espacios en blanco será
+     * cambiado a nulo
+     */
+    public void setNull() {
+        if(this.codigoCliente.isBlank()) this.codigoCliente = null;
+            
+        if (this.empresa.isBlank()) this.empresa = null;
+            
+        if (this.contacto.isBlank()) this.contacto = null;
+            
+        if (this.cargoContacto.isBlank()) this.cargoContacto = null;
+           
+        if (this.direccion.isBlank()) this.direccion = null;
+            
+        if (this.ciudad.isBlank()) this.ciudad = null;
+            
+        if (this.region.isBlank()) this.region = null;
+            
+        if (this.codigoPostal.isBlank()) this.codigoPostal = null;
+            
+        if (this.pais.isBlank()) this.pais = null;
+            
+        if (this.telefono.isBlank()) this.telefono = null;
+        
+        if (this.fax.isBlank()) this.fax = null;
+    }
+    
     @Override
     public String toString() {
         return "Cliente{" + "idCliente=" + idCliente + ", codigoCliente=" + codigoCliente + ", empresa=" + empresa + ", contacto=" + contacto + ", cargoContacto=" + cargoContacto + ", direccion=" + direccion + ", ciudad=" + ciudad + ", region=" + region + ", codigoPostal=" + codigoPostal + ", pais=" + pais + ", telefono=" + telefono + ", fax=" + fax + '}';

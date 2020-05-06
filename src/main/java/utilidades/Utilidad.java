@@ -29,7 +29,7 @@ public class Utilidad {
     }
 
     public static void siguiente() {
-        Integer maxPaginas = ((clientes.idMAX()) / 10);
+        Integer maxPaginas = ((clientes.ultimoID()) / 10);
         if ((maxPaginas - 1) < (inicio / 10)) {
             inicio = maxPaginas * 10;
         } else {

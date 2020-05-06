@@ -149,7 +149,7 @@ public class ClienteDAO {
         return listaClientes;
     }
     
-    public Integer idMAX() {
+    public Integer ultimoID() {
         PreparedStatement stmt = null;
         Integer ultimoId = null;
         
@@ -192,10 +192,12 @@ public class ClienteDAO {
         Boolean resultado = false;
         PreparedStatement stmt = null;
         
+        cliente.setNull();
+        
         if (this.conexion == null || cliente.isBlank()) {
             return resultado;
         }
-
+        
         try {
             String query = "INSERT INTO clientes "
                     + "(id, codigo, empresa, contacto, cargo_contacto, direccion, ciudad, region, cp, pais, telefono, fax) "
@@ -212,7 +214,7 @@ public class ClienteDAO {
             stmt.setString(8, cliente.getCodigoPostal());
             stmt.setString(9, cliente.getPais());
             stmt.setString(10, cliente.getTelefono());
-            stmt.setString(11, cliente.getTelefono());
+            stmt.setString(11, cliente.getFax());
 
             if (stmt.executeUpdate() > 0) {
                 resultado = true;
