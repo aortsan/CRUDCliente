@@ -50,8 +50,6 @@ public class ClienteDAOTest {
         Connection expResult = null;
         Connection result = instance.getConexion();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -60,13 +58,25 @@ public class ClienteDAOTest {
     @Test
     public void testRead() {
         System.out.println("read");
-        Integer idCliente = null;
+        Integer idCliente = 1;
         ClienteDAO instance = new ClienteDAO();
-        Cliente expResult = null;
+        Cliente expResult = new Cliente(
+                        idCliente,
+                        "ALFKI",
+                        "Alfreds Futterkiste",
+                        "Maria Anders",
+                        "Representante de ventas",
+                        "Obere Str. 57",
+                        "Berlín",
+                        null,
+                        "12209",
+                        "Alemania",
+                        "030-0074321",
+                        "030-0076545"
+                );
         Cliente result = instance.read(idCliente);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -80,6 +90,20 @@ public class ClienteDAOTest {
         ClienteDAO instance = new ClienteDAO();
         ArrayList<Cliente> expResult = null;
         ArrayList<Cliente> result = instance.listar(inicio, limite);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of ultimoID method, of class ClienteDAO.
+     */
+    @Test
+    public void testUltimoID() {
+        System.out.println("ultimoID");
+        ClienteDAO instance = new ClienteDAO();
+        Integer expResult = null;
+        Integer result = instance.ultimoID();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

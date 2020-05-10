@@ -37,7 +37,7 @@ public class ClienteDAO {
     }
     
     /**
-     * Búsqueda de un único cliente para comprobar posteriormente si existe
+     * Búsqueda de un único cliente a través de su id
      * @param idCliente
      * @return 
      */
@@ -89,6 +89,60 @@ public class ClienteDAO {
     }
     
     /**
+     * Búsqueda del cliente por su código o nombre
+     * @param codigo
+     * @param empresa
+     * @return 
+     */
+    public Cliente existe(String codigo, String empresa) {
+        Cliente cliente = null;
+        PreparedStatement stmt = null;
+
+        if (this.conexion == null) {
+            return null;
+        }
+
+        try {
+            String query = "SELECT * FROM clientes WHERE codigo = ? OR empresa = ?";
+            stmt = conexion.prepareStatement(query);
+            stmt.setString(1, codigo);
+            stmt.setString(2, empresa);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                cliente = new Cliente(
+                        rs.getInt("id"),
+                        rs.getString("codigo"),
+                        rs.getString("empresa"),
+                        rs.getString("contacto"),
+                        rs.getString("cargo_contacto"),
+                        rs.getString("direccion"),
+                        rs.getString("ciudad"),
+                        rs.getString("region"),
+                        rs.getString("cp"),
+                        rs.getString("pais"),
+                        rs.getString("telefono"),
+                        rs.getString("fax")
+                );
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error en el Select: " + e.getMessage());
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error en el Select: " + ex.getMessage());
+            }
+        }
+
+        return cliente;
+    }
+    
+    /**
      * Listar la base de datos mediante los siguientes parámetros:
      *
      * @param orden
@@ -96,13 +150,11 @@ public class ClienteDAO {
      * @param limite
      * @return
      */
-    //public ArrayList<Cliente> listar(String orden, Integer inicio, Integer limite) {
-    public ArrayList<Cliente> listar(Integer inicio, Integer limite) {
+    public ArrayList<Cliente> listar(Integer inicio, Integer limite/*, String orden*/) {
         ArrayList<Cliente> listaClientes = new ArrayList<>();
         PreparedStatement stmt = null;
 
-        //if (this.conexion == null || orden == null || inicio == null || limite == null) {
-        if (this.conexion == null || inicio == null || limite == null) {
+        if (this.conexion == null || inicio == null || limite == null/* || orden = null*/) {
             return listaClientes;
         }
         
@@ -149,6 +201,10 @@ public class ClienteDAO {
         return listaClientes;
     }
     
+    /**
+     * Obtener el último id de la tabla
+     * @return 
+     */
     public Integer ultimoID() {
         PreparedStatement stmt = null;
         Integer ultimoId = null;
@@ -192,11 +248,11 @@ public class ClienteDAO {
         Boolean resultado = false;
         PreparedStatement stmt = null;
         
-        cliente.setNull();
-        
         if (this.conexion == null || cliente.isBlank()) {
             return resultado;
         }
+        
+        cliente.setNull();
         
         try {
             String query = "INSERT INTO clientes "

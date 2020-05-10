@@ -5,6 +5,8 @@
  */
 package entidades;
 
+import java.util.Objects;
+
 /**
  *
  * @author Alvaro
@@ -248,7 +250,7 @@ public class Cliente {
     public void setFax(String fax) {
         this.fax = fax;
     }
-    
+
     /**
      * Comprobar si los campos clave están vacíos
      * @return true si está vacío
@@ -262,7 +264,7 @@ public class Cliente {
                 || this.ciudad.isBlank()
                 || this.pais.isBlank()
                 || this.telefono.isBlank();
-    }
+    }   
     /**
      * Todo aquel campo atributo cuyo valor contenga espacios en blanco será
      * cambiado a nulo
@@ -293,7 +295,12 @@ public class Cliente {
     
     @Override
     public String toString() {
-        return "Cliente{" + "idCliente=" + idCliente + ", codigoCliente=" + codigoCliente + ", empresa=" + empresa + ", contacto=" + contacto + ", cargoContacto=" + cargoContacto + ", direccion=" + direccion + ", ciudad=" + ciudad + ", region=" + region + ", codigoPostal=" + codigoPostal + ", pais=" + pais + ", telefono=" + telefono + ", fax=" + fax + '}';
+        return "id = " + idCliente + ", código = " + codigoCliente + 
+                ", empresa = " + empresa + ", contacto = " + contacto + 
+                ", cargo = " + cargoContacto + ", dirección = " 
+                + direccion + ", ciudad = " + ciudad + ", región = " + 
+                region + ", cp = " + codigoPostal + ", país = " + pais 
+                + ", teléfono = " + telefono + ", fax = " + fax;
     }
 
 }

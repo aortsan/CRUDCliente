@@ -64,7 +64,6 @@ public class Main {
                     default:
                         System.out.println("Debe elegir una opción válida.");
                 }
-                System.out.println();
             } catch (NumberFormatException nfe) {
                 System.err.println("\nError: Entrada no válida. " + nfe.getMessage() + "\n");
             }

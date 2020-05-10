@@ -73,49 +73,54 @@ public class Utilidad {
      * Insertar un cliente nuevo
      */
     public static void introducirCliente() {
-        System.out.println("\nINSERTAR");
-        System.out.println("--------");
-
         Scanner sc = new Scanner(System.in, "ISO-8859-1");
         Cliente cliente = new Cliente();
 
-        System.out.print("Indique el código de la empresa [ej.ALFKI]: ");
+        System.out.println("\nINSERTAR");
+        System.out.println("--------");
+        System.out.println("Los campos indicados con asterisco (*) son OBLIGATORIOS.\n");
+
+        System.out.print("Indique el código de la empresa [ej.VERDE]*: ");
         cliente.setCodigoCliente(sc.nextLine());
 
-        System.out.print("Indique el nombre de la empresa [ej. Alfreds Futterkiste]: ");
+        System.out.print("Indique el nombre de la empresa [ej. Verduras Deliciosas]*: ");
         cliente.setEmpresa(sc.nextLine());
 
-        System.out.print("Indique el nombre del contacto [ej. Maria Anders]: ");
+        System.out.print("Indique el nombre del contacto [ej. Hank Scorpio]*: ");
         cliente.setContacto(sc.nextLine());
 
-        System.out.print("Indique el cargo del contacto [ej. Representante de ventas]: ");
+        System.out.print("Indique el cargo del contacto [ej. Representante de ventas]*: ");
         cliente.setCargoContacto(sc.nextLine());
 
-        System.out.print("Indique la dirección de la empresa [ej. Obere Str. 57]: ");
+        System.out.print("Indique la dirección de la empresa [ej. Paseo de Extemadura 11]*: ");
         cliente.setDireccion(sc.nextLine());
 
-        System.out.print("Indique la ciudad en la que se encuentra la empresa [ej. Berlin]: ");
+        System.out.print("Indique la ciudad en la que se encuentra la empresa [ej. Madrid]*: ");
         cliente.setCiudad(sc.nextLine());
 
-        System.out.print("Indique la región en la que se encuentra la empresa [ej. B]: ");
+        System.out.print("Indique la región en la que se encuentra la empresa [ej. M]: ");
         cliente.setRegion(sc.nextLine());
 
-        System.out.print("Indique el código postal de la empresa [ej. 12209]: ");
+        System.out.print("Indique el código postal de la empresa [ej. 12349]: ");
         cliente.setCodigoPostal(sc.nextLine());
 
-        System.out.print("Indique el país de la empresa [ej. Alemania]: ");
+        System.out.print("Indique el país de la empresa [ej. Alemania]*: ");
         cliente.setPais(sc.nextLine());
 
-        System.out.print("Indique el teléfono de la empresa [indique el prefijo entre paréntesis]: ");
+        System.out.print("Indique el teléfono de la empresa [indique el prefijo entre paréntesis]*: ");
         cliente.setTelefono(sc.nextLine());
 
         System.out.print("Indique el fax de la empresa [indique el prefijo entre paréntesis]: ");
         cliente.setFax(sc.nextLine());
-
-        if (clientes.insertar(cliente)) {
-            System.out.println("\nEl cliente '" + cliente.getEmpresa() + "' ha sido añadido satisfactoriamente.");
+        
+        if (clientes.existe(cliente.getCodigoCliente(), cliente.getEmpresa()) == null) {
+            if (clientes.insertar(cliente)) {
+                System.out.println("\nEl cliente '" + cliente.getEmpresa() + "' ha sido añadido satisfactoriamente.");
+            } else {
+                System.err.println("\nEl cliente que intenta introducir no es válido.");
+            }
         } else {
-            System.err.println("\nEl empleado que intenta introducir no es válido.");
+            System.err.println("\nEl cliente que intenta registrar existe ya.");
         }
     }
 
@@ -130,18 +135,18 @@ public class Utilidad {
         String valorCampo;
         String resp;
         Cliente cliente = existeCliente();
-
+        
         if (cliente != null) {
-
-            System.out.println("\n¿Está seguro que desea eliminar al siguiente usuario?"
-                    + "\n\n\t" + cliente + "\n");
+            System.out.println("\n\t" + cliente + "\n");
+            System.out.print("Indique el nuevo valor del campo: ");
+            valorCampo = sc.nextLine();
+            
+            System.out.println("\n¿Está seguro que desea actualizar al siguiente cliente?"
+                    + "\n");
             System.out.print("Su respuesta [Y/N]: ");
             resp = sc.nextLine();
-
+            
             if (resp.equalsIgnoreCase("y")) {
-                System.out.print("Indique el nuevo valor del campo: ");
-                valorCampo = sc.nextLine();
-                                
                 if (clientes.update(cliente.getIdCliente(), campo, valorCampo)) {
                     System.out.println("Registro modificado.");
                 } else {
@@ -149,7 +154,7 @@ public class Utilidad {
                 }
             }
         } else {
-            System.err.println("El empleado no existe o no se puede leer.");
+            System.err.println("El cliente no existe o no se puede leer.");
         }
     }
 
@@ -165,7 +170,7 @@ public class Utilidad {
         String resp;
 
         if (cliente != null) {
-            System.out.println("\n¿Está seguro que desea eliminar al siguiente usuario?"
+            System.out.println("\n¿Está seguro que desea eliminar al siguiente cliente?"
                     + "\n\n\t" + cliente + "\n");
             System.out.print("Su respuesta [Y/N]: ");
             resp = sc.nextLine();
@@ -185,7 +190,7 @@ public class Utilidad {
         Scanner sc = new Scanner(System.in);
         Cliente cliente;
 
-        System.out.print("\nIndique el ID del empleado que desea buscar: ");
+        System.out.print("\nIndique el ID del cliente que desea buscar: ");
         cliente = clientes.read(Integer.parseInt(sc.nextLine()));
 
         return cliente;
