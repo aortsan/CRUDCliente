@@ -332,10 +332,12 @@ public class Cliente {
                 || StringUtils.isBlank(this.contacto)
                 || StringUtils.isBlank(this.cargoContacto)
                 || StringUtils.isBlank(this.direccion)
+                || StringUtils.isBlank(this.codigoPostal)
                 || StringUtils.isBlank(this.ciudad)
                 || StringUtils.isBlank(this.pais)
                 || StringUtils.isBlank(this.telefono);
-    }   
+    }
+    
     /**
      * Todo aquel campo atributo cuyo valor contenga espacios en blanco será
      * cambiado a nulo

@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -141,7 +142,7 @@ public class ClienteDAO {
         Cliente cliente = null;
         PreparedStatement stmt = null;
 
-        if (this.conexion == null) {
+        if (this.conexion == null || idCliente == null) {
             return null;
         }
 
@@ -185,7 +186,7 @@ public class ClienteDAO {
     }
     
     /**
-     * Búsqueda del cliente por su código o nombre
+     * Comprobar que el cliente existe a partir de su código o nombre
      * @param codigo
      * @param empresa
      * @return 
@@ -194,7 +195,8 @@ public class ClienteDAO {
         Boolean resultado = false;
         PreparedStatement stmt = null;
 
-        if (this.conexion == null || codigo == null ||  empresa == null) {
+        if (this.conexion == null || StringUtils.isBlank(codigo) 
+                || StringUtils.isBlank(empresa)) {
             return resultado;
         }
 
@@ -304,13 +306,14 @@ public class ClienteDAO {
         Boolean resultado = null;
         PreparedStatement stmt = null;
 
-        if (this.conexion == null || id == null || campo == null) {
+        if (this.conexion == null || id == null || StringUtils.isBlank(campo)  
+                || StringUtils.isBlank(valorCampo)) {
             return resultado;
         }
 
         try {
 
-            String sql = "UPDATE clientes SET " + campo + "=? WHERE id = ?";
+            String sql = "UPDATE clientes SET " + campo + "= ? WHERE id = ?";
 
             stmt = conexion.prepareStatement(sql);
             stmt.setString(1, valorCampo);
