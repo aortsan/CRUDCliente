@@ -36,6 +36,102 @@ public class ClienteDAO {
         return conexion;
     }
     
+    
+        /**
+     * Obtener el último id de la tabla
+     * @return 
+     */
+    public Integer ultimoID() {
+        PreparedStatement stmt = null;
+        Integer ultimoId = null;
+        
+        if (this.conexion == null) {
+            return null;
+        }
+
+        try {
+            String query = "SELECT MAX(id) FROM clientes";
+            stmt = conexion.prepareStatement(query);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                ultimoId = rs.getInt("MAX(id)");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error en el Select: " + e.getMessage());
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error en el Select: " + ex.getMessage());
+            }
+        }
+
+        return ultimoId;
+    }
+    
+       /**
+     * Listar la base de datos mediante los siguientes parámetros:
+     *
+     * @param orden
+     * @param inicio
+     * @param limite
+     * @return
+     */
+    public ArrayList<Cliente> listar(Integer inicio, Integer limite) {
+        ArrayList<Cliente> listaClientes = new ArrayList<>();
+        PreparedStatement stmt = null;
+
+        if (this.conexion == null || inicio == null || limite == null) {
+            return listaClientes;
+        }
+        
+        try {        
+            String query = "SELECT * FROM clientes ORDER BY id LIMIT ? OFFSET ?";
+                    
+            stmt = conexion.prepareStatement(query);
+            stmt.setInt(1, limite);
+            stmt.setInt(2, inicio);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Cliente cliente = new Cliente(
+                        rs.getInt("id"),
+                        rs.getString("codigo"),
+                        rs.getString("empresa"),
+                        rs.getString("contacto"),
+                        rs.getString("cargo_contacto"),
+                        rs.getString("direccion"),
+                        rs.getString("ciudad"),
+                        rs.getString("region"),
+                        rs.getString("cp"),
+                        rs.getString("pais"),
+                        rs.getString("telefono"),
+                        rs.getString("fax")
+                );
+                listaClientes.add(cliente);
+            }
+
+        } catch (SQLException ex) {
+            System.err.println("Error al listar: " + ex.getMessage());
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error al cerrar la conexión: " + ex.getMessage());
+            }
+        }
+
+        return listaClientes;
+    }
+    
     /**
      * Búsqueda de un único cliente a través de su id
      * @param idCliente
@@ -94,12 +190,12 @@ public class ClienteDAO {
      * @param empresa
      * @return 
      */
-    public Cliente existe(String codigo, String empresa) {
-        Cliente cliente = null;
+    public Boolean existe(String codigo, String empresa) {
+        Boolean resultado = false;
         PreparedStatement stmt = null;
 
-        if (this.conexion == null) {
-            return null;
+        if (this.conexion == null || codigo == null ||  empresa == null) {
+            return resultado;
         }
 
         try {
@@ -111,20 +207,21 @@ public class ClienteDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                cliente = new Cliente(
-                        rs.getInt("id"),
-                        rs.getString("codigo"),
-                        rs.getString("empresa"),
-                        rs.getString("contacto"),
-                        rs.getString("cargo_contacto"),
-                        rs.getString("direccion"),
-                        rs.getString("ciudad"),
-                        rs.getString("region"),
-                        rs.getString("cp"),
-                        rs.getString("pais"),
-                        rs.getString("telefono"),
-                        rs.getString("fax")
-                );
+//                cliente = new Cliente(
+//                        rs.getInt("id"),
+//                        rs.getString("codigo"),
+//                        rs.getString("empresa"),
+//                        rs.getString("contacto"),
+//                        rs.getString("cargo_contacto"),
+//                        rs.getString("direccion"),
+//                        rs.getString("ciudad"),
+//                        rs.getString("region"),
+//                        rs.getString("cp"),
+//                        rs.getString("pais"),
+//                        rs.getString("telefono"),
+//                        rs.getString("fax")
+//                );
+                resultado = true;
             }
 
         } catch (SQLException e) {
@@ -139,103 +236,7 @@ public class ClienteDAO {
             }
         }
 
-        return cliente;
-    }
-    
-    /**
-     * Listar la base de datos mediante los siguientes parámetros:
-     *
-     * @param orden
-     * @param inicio
-     * @param limite
-     * @return
-     */
-    public ArrayList<Cliente> listar(Integer inicio, Integer limite/*, String orden*/) {
-        ArrayList<Cliente> listaClientes = new ArrayList<>();
-        PreparedStatement stmt = null;
-
-        if (this.conexion == null || inicio == null || limite == null/* || orden = null*/) {
-            return listaClientes;
-        }
-        
-        try {        
-            //String query = "SELECT * FROM clientes ORDER BY "  + " LIMIT ? OFFSET ?";
-            String query = "SELECT * FROM clientes ORDER BY id LIMIT ? OFFSET ?";
-                    
-            stmt = conexion.prepareStatement(query);
-            stmt.setInt(1, limite);
-            stmt.setInt(2, inicio);
-
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Cliente cliente = new Cliente(
-                        rs.getInt("id"),
-                        rs.getString("codigo"),
-                        rs.getString("empresa"),
-                        rs.getString("contacto"),
-                        rs.getString("cargo_contacto"),
-                        rs.getString("direccion"),
-                        rs.getString("ciudad"),
-                        rs.getString("region"),
-                        rs.getString("cp"),
-                        rs.getString("pais"),
-                        rs.getString("telefono"),
-                        rs.getString("fax")
-                );
-                listaClientes.add(cliente);
-            }
-
-        } catch (SQLException ex) {
-            System.err.println("Error al listar: " + ex.getMessage());
-        } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException ex) {
-                System.err.println("Error al cerrar la conexión: " + ex.getMessage());
-            }
-        }
-
-        return listaClientes;
-    }
-    
-    /**
-     * Obtener el último id de la tabla
-     * @return 
-     */
-    public Integer ultimoID() {
-        PreparedStatement stmt = null;
-        Integer ultimoId = null;
-        
-        if (this.conexion == null) {
-            return null;
-        }
-
-        try {
-            String query = "SELECT MAX(id) FROM clientes";
-            stmt = conexion.prepareStatement(query);
-
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                ultimoId = rs.getInt("MAX(id)");
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Error en el Select: " + e.getMessage());
-        } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException ex) {
-                System.err.println("Error en el Select: " + ex.getMessage());
-            }
-        }
-
-        return ultimoId;
+        return resultado;
     }
     
     /**
@@ -251,9 +252,7 @@ public class ClienteDAO {
         if (this.conexion == null || cliente.isBlank()) {
             return resultado;
         }
-        
-        cliente.setNull();
-        
+
         try {
             String query = "INSERT INTO clientes "
                     + "(id, codigo, empresa, contacto, cargo_contacto, direccion, ciudad, region, cp, pais, telefono, fax) "

@@ -20,12 +20,14 @@ import static org.junit.Assert.*;
  * @author Alvaro
  */
 public class ClienteDAOTest {
+    private static ClienteDAO clientes;
     
     public ClienteDAOTest() {
     }
     
     @BeforeClass
     public static void setUpClass() {
+        clientes = new ClienteDAO();
     }
     
     @AfterClass
@@ -46,10 +48,9 @@ public class ClienteDAOTest {
     @Test
     public void testGetConexion() {
         System.out.println("getConexion");
-        ClienteDAO instance = new ClienteDAO();
         Connection expResult = null;
-        Connection result = instance.getConexion();
-        assertEquals(expResult, result);
+        Connection result = clientes.getConexion();
+        assertNotEquals(expResult, result);
     }
 
     /**
@@ -58,25 +59,74 @@ public class ClienteDAOTest {
     @Test
     public void testRead() {
         System.out.println("read");
-        Integer idCliente = 1;
-        ClienteDAO instance = new ClienteDAO();
-        Cliente expResult = new Cliente(
-                        idCliente,
-                        "ALFKI",
-                        "Alfreds Futterkiste",
-                        "Maria Anders",
-                        "Representante de ventas",
-                        "Obere Str. 57",
-                        "Berlín",
-                        null,
-                        "12209",
-                        "Alemania",
-                        "030-0074321",
-                        "030-0076545"
-                );
-        Cliente result = instance.read(idCliente);
+        Integer idCliente = 7;
+        Cliente expResult = new Cliente(7, "BLONP", "Blondel père et fils", "Frédérique Citeaux", "Gerente de marketing", "24, place Kléber", "Estrasburgo", null, "67000", "Francia", "88.60.15.31", "88.60.15.32");
+        Cliente result = clientes.read(idCliente);
+//        assertEquals(expResult.getIdCliente(), result.getIdCliente());
+//        assertEquals(expResult.getCodigoCliente(), result.getCodigoCliente());
+//        assertEquals(expResult.getEmpresa(), result.getEmpresa());
+//        assertEquals(expResult.getContacto(), result.getContacto());
+//        assertEquals(expResult.getCargoContacto(), result.getCargoContacto());
+//        assertEquals(expResult.getDireccion(), result.getDireccion());
+//        assertEquals(expResult.getCiudad(), result.getCiudad());
+//        assertEquals(expResult.getCodigoPostal(), result.getCodigoPostal());
+//        assertEquals(expResult.getPais(), result.getPais());
+//        assertEquals(expResult.getTelefono(), result.getTelefono());
+//        assertEquals(expResult.getFax(), result.getFax());
+        assertTrue(expResult.equals(result));
+        
+        idCliente = 100;
+        expResult = null;
+        result = clientes.read(idCliente);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+        
+        idCliente = -1;
+        expResult = null;
+        result = clientes.read(idCliente);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of existe method, of class ClienteDAO.
+     */
+    @Test
+    public void testExiste() {
+        System.out.println("existe");
+        
+        //Existe tanto el código como el nombre de la empresa
+        String codigo = "BLONP";
+        String empresa = "Blondel père et fils";
+        Boolean expResult = true;
+        Boolean result = clientes.existe(codigo, empresa);
+        assertEquals(expResult, result);
+        
+        //Existe el nombre de la empresa
+        codigo = "DSFSDF";
+        empresa = "Blondel père et fils";
+        expResult = true;
+        result = clientes.existe(codigo, empresa);
+        assertEquals(expResult, result);
+        
+        //Existe el código de la empresa
+        codigo = "BLONP";
+        empresa = "Empresa ficticia";
+        expResult = true;
+        result = clientes.existe(codigo, empresa);
+        assertEquals(expResult, result);
+        
+        //Ninguno de los dos campos están registrados
+        codigo = "DSFSDF";
+        empresa = "Empresa ficticia";
+        expResult = false;
+        result = clientes.existe(codigo, empresa);
+        assertEquals(expResult, result);
+        
+        //No existe
+        codigo = null;
+        empresa = null;
+        expResult = false;
+        result = clientes.existe(codigo, empresa);
+        assertEquals(expResult, result);
     }
 
     /**
@@ -101,12 +151,15 @@ public class ClienteDAOTest {
     @Test
     public void testUltimoID() {
         System.out.println("ultimoID");
-        ClienteDAO instance = new ClienteDAO();
+        
         Integer expResult = null;
-        Integer result = instance.ultimoID();
+        Integer result = clientes.ultimoID();
+        assertNotEquals(expResult, result);
+        
+        expResult = 95;
+        result = clientes.ultimoID();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+       
     }
 
     /**
@@ -115,13 +168,30 @@ public class ClienteDAOTest {
     @Test
     public void testInsertar() {
         System.out.println("insertar");
-        Cliente cliente = null;
-        ClienteDAO instance = new ClienteDAO();
-        Boolean expResult = null;
-        Boolean result = instance.insertar(cliente);
+        
+        //Caso donde los atributos del cliente han sido insertados con espacios
+        Cliente cliente = new Cliente(null," "," "," "," "," "," "," "," "," "," "," ");
+        Boolean expResult = false;
+        Boolean result = clientes.insertar(cliente);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        //Caso donde los atributos del cliente son nulos
+        cliente = new Cliente(null, null, null, null, null, null, null, null, null, null, null, null);
+        expResult = false;
+        result = clientes.insertar(cliente);
+        assertEquals(expResult, result);
+        
+        //Caso donde los atributos del cliente están vacíos
+        cliente = new Cliente();
+        expResult = false;
+        result = clientes.insertar(cliente);
+        assertEquals(expResult, result);
+        
+        //Caso donde los atributos del cliente están rellenados
+        cliente = new Cliente(94, "PARFE", "Tabacalera Fumadores", "John Doe", "Representante de ventas", "c/ Caídos en el Invent", "Madrid", null, "28013", "España", "(91) 3825483", null);
+        expResult = true;
+        result = clientes.insertar(cliente);
+        assertEquals(expResult, result);
     }
 
     /**
@@ -147,13 +217,11 @@ public class ClienteDAOTest {
     @Test
     public void testDelete() {
         System.out.println("delete");
-        Integer idCliente = null;
-        ClienteDAO instance = new ClienteDAO();
-        Boolean expResult = null;
-        Boolean result = instance.delete(idCliente);
+        
+        Integer idCliente = 96;
+        Boolean expResult = true;
+        Boolean result = clientes.delete(idCliente);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }

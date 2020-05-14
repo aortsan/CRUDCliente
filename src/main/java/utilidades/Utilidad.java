@@ -48,27 +48,50 @@ public class Utilidad {
     }
 
     public static void listado() {
-        System.out.println("\nLISTADO");
-        System.out.println("--------");
+        listaClientes = clientes.listar(inicio, limite);
+        
+        System.out.println("+-----+-------+------------------------------+-------------------------+------------------------------"
+                + "+------------------------------+---------------+---------------+----------+---------------+---------------+"
+                + "---------------+");
+        System.out.printf("|%-5s|%-7s|%-30s|%-25s|%-30s|%-30s|%-15s|%-15s|%-10s|%-15s|%-15s|%-15s|%n",
+                "Id", "Código", "Empresa", "Contacto", "Cargo", "Dirección", "Ciudad", "Región", "C.Postal", "País", "Teléfono", "Fax");
+        System.out.println("+-----+-------+------------------------------+-------------------------+------------------------------"
+                + "+------------------------------+---------------+---------------+----------+---------------+---------------+"
+                + "---------------+");
+        
+        for (Cliente c : listaClientes) {
+            System.out.printf("|%-5d|%-7.7s|%-30.28s|%-25.24s|%-30.29s|%-30.28s|%-15.14s|%-15.14s|%-10.9s|%-15.14s|%-15.14s|%-15.14s|%n",
+                    c.getIdCliente(), c.getCodigoCliente(), c.getEmpresa(),
+                    c.getContacto(), c.getCargoContacto(), c.getDireccion(), c.getCiudad(), c.getRegion(),
+                    c.getCodigoPostal(), c.getPais(), c.getTelefono(), c.getFax());
+        }
+        System.out.println("+-----+-------+------------------------------+-------------------------+------------------------------"
+                + "+------------------------------+---------------+---------------+----------+---------------+---------------+"
+                + "---------------+");
+    }
+    
+    /**
+     * Ver el registro completo de un cliente
+     */
+    public static void registroCompleto(){
+        Cliente cliente = existeCliente();
         System.out.println("+-----+-------+-------------------------------------+-------------------------+------------------------------"
                 + "+------------------------------------------------+---------------+---------------+----------+---------------+---------------+"
                 + "---------------+");
         System.out.printf("|%-5s|%-7s|%-37s|%-25s|%-30s|%-48s|%-15s|%-15s|%-10s|%-15s|%-15s|%-15s|%n",
                 "Id", "Código", "Empresa", "Contacto", "Cargo", "Dirección", "Ciudad", "Región", "C.Postal", "País", "Teléfono", "Fax");
-//        listaClientes = clientes.listar(orden, 0, 10);
-        listaClientes = clientes.listar(inicio, limite);
-
-        for (Cliente c : listaClientes) {
-            System.out.printf("|%5d|%7s|%37s|%25s|%30s|%48s|%15s|%15s|%10s|%15s|%15s|%15s|%n",
-                    c.getIdCliente(), c.getCodigoCliente(), c.getEmpresa(),
-                    c.getContacto(), c.getCargoContacto(), c.getDireccion(), c.getCiudad(), c.getRegion(),
-                    c.getCodigoPostal(), c.getPais(), c.getTelefono(), c.getFax());
-        }
+        System.out.println("+-----+-------+-------------------------------------+-------------------------+------------------------------"
+                + "+------------------------------------------------+---------------+---------------+----------+---------------+---------------+"
+                + "---------------+");
+        System.out.printf("|%-3d|%-7s|%-37s|%-25s|%-30s|%-48s|%-15s|%-15s|%-10s|%-15s|%-15s|%-15s|%n",
+                    cliente.getIdCliente(), cliente.getCodigoCliente(), cliente.getEmpresa(),
+                    cliente.getContacto(), cliente.getCargoContacto(), cliente.getDireccion(), cliente.getCiudad(), cliente.getRegion(),
+                    cliente.getCodigoPostal(), cliente.getPais(), cliente.getTelefono(), cliente.getFax());
         System.out.println("+-----+-------+-------------------------------------+-------------------------+------------------------------"
                 + "+------------------------------------------------+---------------+---------------+----------+---------------+---------------+"
                 + "---------------+");
     }
-
+    
     /**
      * Insertar un cliente nuevo
      */
@@ -81,7 +104,7 @@ public class Utilidad {
         System.out.println("Los campos indicados con asterisco (*) son OBLIGATORIOS.\n");
 
         System.out.print("Indique el código de la empresa [ej.VERDE]*: ");
-        cliente.setCodigoCliente(sc.nextLine());
+        cliente.setCodigoCliente(sc.nextLine().toUpperCase());
 
         System.out.print("Indique el nombre de la empresa [ej. Verduras Deliciosas]*: ");
         cliente.setEmpresa(sc.nextLine());
@@ -107,13 +130,13 @@ public class Utilidad {
         System.out.print("Indique el país de la empresa [ej. Alemania]*: ");
         cliente.setPais(sc.nextLine());
 
-        System.out.print("Indique el teléfono de la empresa [indique el prefijo entre paréntesis]*: ");
+        System.out.print("Indique el teléfono de la empresa [(91) 3722473]*: ");
         cliente.setTelefono(sc.nextLine());
 
-        System.out.print("Indique el fax de la empresa [indique el prefijo entre paréntesis]: ");
+        System.out.print("Indique el fax de la empresa: ");
         cliente.setFax(sc.nextLine());
-        
-        if (clientes.existe(cliente.getCodigoCliente(), cliente.getEmpresa()) == null) {
+
+        if (!clientes.existe(cliente.getCodigoCliente(), cliente.getEmpresa())) {
             if (clientes.insertar(cliente)) {
                 System.out.println("\nEl cliente '" + cliente.getEmpresa() + "' ha sido añadido satisfactoriamente.");
             } else {
@@ -135,17 +158,17 @@ public class Utilidad {
         String valorCampo;
         String resp;
         Cliente cliente = existeCliente();
-        
+
         if (cliente != null) {
             System.out.println("\n\t" + cliente + "\n");
             System.out.print("Indique el nuevo valor del campo: ");
             valorCampo = sc.nextLine();
-            
+
             System.out.println("\n¿Está seguro que desea actualizar al siguiente cliente?"
                     + "\n");
             System.out.print("Su respuesta [Y/N]: ");
             resp = sc.nextLine();
-            
+
             if (resp.equalsIgnoreCase("y")) {
                 if (clientes.update(cliente.getIdCliente(), campo, valorCampo)) {
                     System.out.println("Registro modificado.");

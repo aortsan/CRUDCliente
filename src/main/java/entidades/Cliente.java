@@ -6,6 +6,7 @@
 package entidades;
 
 import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -251,19 +252,89 @@ public class Cliente {
         this.fax = fax;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 31 * hash + Objects.hashCode(this.idCliente);
+        hash = 31 * hash + Objects.hashCode(this.codigoCliente);
+        hash = 31 * hash + Objects.hashCode(this.empresa);
+        hash = 31 * hash + Objects.hashCode(this.contacto);
+        hash = 31 * hash + Objects.hashCode(this.cargoContacto);
+        hash = 31 * hash + Objects.hashCode(this.direccion);
+        hash = 31 * hash + Objects.hashCode(this.ciudad);
+        hash = 31 * hash + Objects.hashCode(this.region);
+        hash = 31 * hash + Objects.hashCode(this.codigoPostal);
+        hash = 31 * hash + Objects.hashCode(this.pais);
+        hash = 31 * hash + Objects.hashCode(this.telefono);
+        hash = 31 * hash + Objects.hashCode(this.fax);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Cliente other = (Cliente) obj;
+        if (!Objects.equals(this.codigoCliente, other.codigoCliente)) {
+            return false;
+        }
+        if (!Objects.equals(this.empresa, other.empresa)) {
+            return false;
+        }
+        if (!Objects.equals(this.contacto, other.contacto)) {
+            return false;
+        }
+        if (!Objects.equals(this.cargoContacto, other.cargoContacto)) {
+            return false;
+        }
+        if (!Objects.equals(this.direccion, other.direccion)) {
+            return false;
+        }
+        if (!Objects.equals(this.ciudad, other.ciudad)) {
+            return false;
+        }
+        if (!Objects.equals(this.region, other.region)) {
+            return false;
+        }
+        if (!Objects.equals(this.codigoPostal, other.codigoPostal)) {
+            return false;
+        }
+        if (!Objects.equals(this.pais, other.pais)) {
+            return false;
+        }
+        if (!Objects.equals(this.telefono, other.telefono)) {
+            return false;
+        }
+        if (!Objects.equals(this.fax, other.fax)) {
+            return false;
+        }
+        if (!Objects.equals(this.idCliente, other.idCliente)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
     /**
-     * Comprobar si los campos clave están vacíos
-     * @return true si está vacío
+     * Comprobar si los campos clave están vacíos o son nulos
+     * @return true si está vacío o es nulo
      */
     public Boolean isBlank() {
-        return this.codigoCliente.isBlank() 
-                || this.empresa.isBlank() 
-                || this.contacto.isBlank()
-                || this.cargoContacto.isBlank() 
-                || this.direccion.isBlank() 
-                || this.ciudad.isBlank()
-                || this.pais.isBlank()
-                || this.telefono.isBlank();
+        return StringUtils.isBlank(this.codigoCliente) 
+                || StringUtils.isBlank(this.empresa)
+                || StringUtils.isBlank(this.contacto)
+                || StringUtils.isBlank(this.cargoContacto)
+                || StringUtils.isBlank(this.direccion)
+                || StringUtils.isBlank(this.ciudad)
+                || StringUtils.isBlank(this.pais)
+                || StringUtils.isBlank(this.telefono);
     }   
     /**
      * Todo aquel campo atributo cuyo valor contenga espacios en blanco será
@@ -302,5 +373,13 @@ public class Cliente {
                 region + ", cp = " + codigoPostal + ", país = " + pais 
                 + ", teléfono = " + telefono + ", fax = " + fax;
     }
-
+    
+    
+    public String toNew(){
+        return String.format("new Cliente(%d, \"%s\", \"%s\", \"%s\", \"%s\""
+                + ", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")",
+                idCliente ,codigoCliente , empresa, contacto,
+                cargoContacto,direccion, ciudad, region, 
+                codigoPostal, pais, telefono, fax);
+    }
 }
