@@ -24,7 +24,7 @@ public class Main {
 
         Utilidad.conexion();
 
-        System.out.println("\t\tBIENVENIDO");
+        System.out.println("\n\t\tBIENVENIDO");
         System.out.println("\t\t-----------");
 
         Utilidad.listado();
@@ -43,9 +43,9 @@ public class Main {
 
                 switch (opcion) {
                     case 0:
-                        System.out.println("\nHasta pronto.\n");
-                        System.out.println("\t    -------------");
-                        System.out.println("\t\tFIN\n");
+                        System.out.printf("\n%-10s %-10s","","Hasta pronto.");
+                        System.out.printf("\n%-10s %-10s","","-------------");
+                        System.out.printf("\n%-15s %-10s","","FIN");
                         System.exit(0);
                         break;
                     case 1:

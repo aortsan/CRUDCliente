@@ -201,7 +201,7 @@ public class Utilidad {
         if (!clientes.existe(cliente.getCodigoCliente(), cliente.getEmpresa())) {
             if (clientes.insertar(cliente)) {
                 System.out.println("El cliente '" + cliente.getEmpresa() + "' ha sido añadido satisfactoriamente.");
-                registroCompleto(cliente);
+                registroCompleto(clientes.read(clientes.ultimoID()));
             } else {
                 System.err.println("El cliente que intenta introducir no es válido.");
             }

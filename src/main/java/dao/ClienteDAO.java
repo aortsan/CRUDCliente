@@ -36,16 +36,16 @@ public class ClienteDAO {
     public Connection getConexion() {
         return conexion;
     }
-    
-    
-        /**
+
+    /**
      * Obtener el último id de la tabla
-     * @return 
+     *
+     * @return
      */
     public Integer ultimoID() {
         PreparedStatement stmt = null;
         Integer ultimoId = null;
-        
+
         if (this.conexion == null) {
             return null;
         }
@@ -74,11 +74,10 @@ public class ClienteDAO {
 
         return ultimoId;
     }
-    
-       /**
+
+    /**
      * Listar la base de datos mediante los siguientes parámetros:
      *
-     * @param orden
      * @param inicio
      * @param limite
      * @return
@@ -90,10 +89,10 @@ public class ClienteDAO {
         if (this.conexion == null || inicio == null || limite == null) {
             return listaClientes;
         }
-        
-        try {        
+
+        try {
             String query = "SELECT * FROM clientes ORDER BY id LIMIT ? OFFSET ?";
-                    
+
             stmt = conexion.prepareStatement(query);
             stmt.setInt(1, limite);
             stmt.setInt(2, inicio);
@@ -132,11 +131,12 @@ public class ClienteDAO {
 
         return listaClientes;
     }
-    
+
     /**
      * Búsqueda de un único cliente a través de su id
+     *
      * @param idCliente
-     * @return 
+     * @return
      */
     public Cliente read(Integer idCliente) {
         Cliente cliente = null;
@@ -184,18 +184,19 @@ public class ClienteDAO {
 
         return cliente;
     }
-    
+
     /**
      * Comprobar que el cliente existe a partir de su código o nombre
+     *
      * @param codigo
      * @param empresa
-     * @return 
+     * @return
      */
     public Boolean existe(String codigo, String empresa) {
         Boolean resultado = false;
         PreparedStatement stmt = null;
 
-        if (this.conexion == null || StringUtils.isBlank(codigo) 
+        if (this.conexion == null || StringUtils.isBlank(codigo)
                 || StringUtils.isBlank(empresa)) {
             return resultado;
         }
@@ -240,7 +241,7 @@ public class ClienteDAO {
 
         return resultado;
     }
-    
+
     /**
      * Insertar un cliente
      *
@@ -250,7 +251,7 @@ public class ClienteDAO {
     public Boolean insertar(Cliente cliente) {
         Boolean resultado = false;
         PreparedStatement stmt = null;
-        
+
         if (this.conexion == null || cliente.isBlank()) {
             return resultado;
         }
@@ -306,14 +307,14 @@ public class ClienteDAO {
         Boolean resultado = false;
         PreparedStatement stmt = null;
 
-        if (this.conexion == null || id == null || StringUtils.isBlank(campo)  
+        if (this.conexion == null || id == null || StringUtils.isBlank(campo)
                 || StringUtils.isBlank(valorCampo)) {
             return resultado;
         }
 
         try {
 
-            String sql = "UPDATE clientes SET " + campo + "= ? WHERE id = ?";
+            String sql = "UPDATE clientes SET " + campo + " = ? WHERE id = ?";
 
             stmt = conexion.prepareStatement(sql);
             stmt.setString(1, valorCampo);
@@ -357,10 +358,11 @@ public class ClienteDAO {
             stmt = conexion.prepareStatement(sql);
             stmt.setInt(1, idCliente);
 
-            resultado = stmt.execute();
-
+            if (stmt.executeUpdate() > 0) {
+                resultado = true;
+            }
+            
         } catch (SQLException e) {
-
             System.err.println("Error en el Delete: " + e.getMessage());
         } finally {
             try {
@@ -368,7 +370,7 @@ public class ClienteDAO {
                     stmt.close();
                 }
             } catch (SQLException ex) {
-                System.err.println("Error al cerrar la conexin: " + ex.getMessage());
+                System.err.println("Error al cerrar la conexión: " + ex.getMessage());
             }
         }
 
