@@ -8,6 +8,7 @@ package utilidades;
 import dao.ClienteDAO;
 import entidades.Cliente;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -21,6 +22,10 @@ public class Utilidad {
     private static Integer inicio = 0;
     private static Integer limite = 10;
 
+    /**
+     * Si la conexión con la base de datos no se establece, el programa mostrará
+     * un mensaje de error y se cerrará.
+     */
     public static void conexion() {
         if (clientes.getConexion() == null) {
             System.err.println("Programa terminado. Error en la conexión.");
@@ -28,6 +33,10 @@ public class Utilidad {
         }
     }
 
+    /**
+     * Visualizar los 10 registros siguientes, tomándose de referencia el último
+     * id para limitar el número de páginas.
+     */
     public static void siguiente() {
         Integer maxPaginas = ((clientes.ultimoID()) / 10);
         if ((maxPaginas - 1) < (inicio / 10)) {
@@ -38,6 +47,10 @@ public class Utilidad {
         listado();
     }
 
+    /**
+     * Visualizar los 10 registros anteriores, si llega a 0 no podrá seguir
+     * retrocediendo.
+     */
     public static void anterior() {
         if (inicio <= 0) {
             inicio = 0;
@@ -47,50 +60,95 @@ public class Utilidad {
         listado();
     }
 
+    /**
+     * Listado de los clientes. Algunos campos tienen un salto de línea, por lo
+     * que con 'palabras[]' se pretende meter el contenido separado por ese
+     * salto en un array con el que luego se juntan las cadenas.
+     */
     public static void listado() {
+        String palabras[];
         listaClientes = clientes.listar(inicio, limite);
-        
-        System.out.println("+-----+-------+------------------------------+------------------------+------------------------------"
+
+        System.out.println("+----+-------+------------------------------+------------------------+------------------------------"
                 + "+------------------------------+---------------+----------+---------------+---------------+");
-        System.out.printf("|%-5s|%-7s|%-30s|%-24s|%-30s|%-30s|%-15s|%-10s|%-15s|%-15s|%n",
+        System.out.printf("|%-4s|%-7s|%-30s|%-24s|%-30s|%-30s|%-15s|%-10s|%-15s|%-15s|%n",
                 "Id", "Código", "Empresa", "Contacto", "Cargo", "Dirección", "Ciudad", "C.Postal", "País", "Teléfono");
-        System.out.println("+-----+-------+------------------------------+------------------------+------------------------------"
+        System.out.println("+----+-------+------------------------------+------------------------+------------------------------"
                 + "+------------------------------+---------------+----------+---------------+---------------+");
-        
+
         for (Cliente c : listaClientes) {
-            System.out.printf("|%-5d|%-7.7s|%-30.28s|%-24.23s|%-30.29s|%-30.28s|%-15.14s|%-10.9s|%-15.14s|%-15.14s|%n",
+            palabras = c.getDireccion().split("\\r?\\n");
+
+            if (palabras.length > 1) {
+                c.setDireccion(palabras[0] + " " + palabras[1]);
+            } else {
+                c.setDireccion(palabras[0]);
+            }
+
+            System.out.printf("|%-4d|%-7.7s|%-30.28s|%-24.23s|%-30.29s|%-30.28s|%-15.14s|%-10.9s|%-15.14s|%-15.14s|%n",
                     c.getIdCliente(), c.getCodigoCliente(), c.getEmpresa(),
                     c.getContacto(), c.getCargoContacto(), c.getDireccion(), c.getCiudad(),
                     c.getCodigoPostal(), c.getPais(), c.getTelefono());
         }
-        System.out.println("+-----+-------+------------------------------+------------------------+------------------------------"
+        System.out.println("+----+-------+------------------------------+------------------------+------------------------------"
                 + "+------------------------------+---------------+----------+---------------+---------------+");
     }
     
-    /**
-     * Ver el registro completo de un cliente
+     /**
+     * Comprobar que el registro existe o no.
+     *
+     * @return
      */
-    public static void registroCompleto(){
-        Cliente cliente = existeCliente();
-        System.out.println("+-----+-------+-------------------------------------+-------------------------+------------------------------"
-                + "+------------------------------------------------+---------------+---------------+----------+---------------+---------------+"
-                + "---------------+");
-        System.out.printf("|%-5s|%-7s|%-37s|%-25s|%-30s|%-48s|%-15s|%-15s|%-10s|%-15s|%-15s|%-15s|%n",
-                "Id", "Código", "Empresa", "Contacto", "Cargo", "Dirección", "Ciudad", "Región", "C.Postal", "País", "Teléfono", "Fax");
-        System.out.println("+-----+-------+-------------------------------------+-------------------------+------------------------------"
-                + "+------------------------------------------------+---------------+---------------+----------+---------------+---------------+"
-                + "---------------+");
-        System.out.printf("|%-3d|%-7s|%-37s|%-25s|%-30s|%-48s|%-15s|%-15s|%-10s|%-15s|%-15s|%-15s|%n",
-                    cliente.getIdCliente(), cliente.getCodigoCliente(), cliente.getEmpresa(),
-                    cliente.getContacto(), cliente.getCargoContacto(), cliente.getDireccion(), cliente.getCiudad(), cliente.getRegion(),
-                    cliente.getCodigoPostal(), cliente.getPais(), cliente.getTelefono(), cliente.getFax());
-        System.out.println("+-----+-------+-------------------------------------+-------------------------+------------------------------"
-                + "+------------------------------------------------+---------------+---------------+----------+---------------+---------------+"
-                + "---------------+");
+    public static Cliente existeCliente() {
+        Scanner sc = new Scanner(System.in);
+        Cliente cliente = null;
+
+        System.out.print("\nIndique el ID del cliente que desea buscar: ");
+        cliente = clientes.read(Integer.parseInt(sc.nextLine()));
+        
+        if(cliente != null){
+            registroCompleto(cliente);
+        } else {
+            System.err.println("El cliente no existe o no se puede leer.");
+        }
+        
+        return cliente;
     }
     
     /**
-     * Insertar un cliente nuevo
+     * Ver el registro completo de un cliente.
+     */
+    public static void registroCompleto(Cliente cliente) {
+        String palabras[];
+
+        System.out.println("+----+-------+-------------------------------------+-------------------------+------------------------------"
+                + "+------------------------------------------------+---------------+---------------+----------+---------------+---------------+"
+                + "---------------+");
+        System.out.printf("|%-4s|%-7s|%-37s|%-25s|%-30s|%-48s|%-15s|%-15s|%-10s|%-15s|%-15s|%-15s|%n",
+                "Id", "Código", "Empresa", "Contacto", "Cargo", "Dirección", "Ciudad", "Región", "C.Postal", "País", "Teléfono", "Fax");
+        System.out.println("+----+-------+-------------------------------------+-------------------------+------------------------------"
+                + "+------------------------------------------------+---------------+---------------+----------+---------------+---------------+"
+                + "---------------+");
+
+        palabras = cliente.getDireccion().split("\\r?\\n");
+
+        if (palabras.length > 1) {
+            cliente.setDireccion(palabras[0] + " " + palabras[1]);
+        } else {
+            cliente.setDireccion(palabras[0]);
+        }
+
+        System.out.printf("|%-4d|%-7s|%-37s|%-25s|%-30s|%-48s|%-15s|%-15s|%-10s|%-15s|%-15s|%-15s|%n",
+                cliente.getIdCliente(), cliente.getCodigoCliente(), cliente.getEmpresa(),
+                cliente.getContacto(), cliente.getCargoContacto(), cliente.getDireccion(), cliente.getCiudad(), cliente.getRegion(),
+                cliente.getCodigoPostal(), cliente.getPais(), cliente.getTelefono(), cliente.getFax());
+        System.out.println("+----+-------+-------------------------------------+-------------------------+------------------------------"
+                + "+------------------------------------------------+---------------+---------------+----------+---------------+---------------+"
+                + "---------------+");
+    }
+
+    /**
+     * Insertar un cliente nuevo.
      */
     public static void introducirCliente() {
         Scanner sc = new Scanner(System.in, "ISO-8859-1");
@@ -121,32 +179,40 @@ public class Utilidad {
         System.out.print("Indique la región en la que se encuentra la empresa [ej. M]: ");
         cliente.setRegion(sc.nextLine());
 
-        System.out.print("Indique el código postal de la empresa [ej. 12349]: ");
+        System.out.print("Indique el código postal de la empresa [ej. 28034]*: ");
         cliente.setCodigoPostal(sc.nextLine());
 
         System.out.print("Indique el país de la empresa [ej. Alemania]*: ");
         cliente.setPais(sc.nextLine());
 
-        System.out.print("Indique el teléfono de la empresa [(91) 3722473]*: ");
+        System.out.print("Indique el teléfono de la empresa [ej. 913722473]*: ");
         cliente.setTelefono(sc.nextLine());
 
         System.out.print("Indique el fax de la empresa: ");
         cliente.setFax(sc.nextLine());
 
+        /*Aquellos campos obligatorios que no se han introducido pasarán a ser
+        nulo*/
+        cliente.setNull();
+        
+        //salto de línea con propósito estético
+        System.out.println("");
+        
         if (!clientes.existe(cliente.getCodigoCliente(), cliente.getEmpresa())) {
             if (clientes.insertar(cliente)) {
-                System.out.println("\nEl cliente '" + cliente.getEmpresa() + "' ha sido añadido satisfactoriamente.");
+                System.out.println("El cliente '" + cliente.getEmpresa() + "' ha sido añadido satisfactoriamente.");
+                registroCompleto(cliente);
             } else {
-                System.err.println("\nEl cliente que intenta introducir no es válido.");
+                System.err.println("El cliente que intenta introducir no es válido.");
             }
         } else {
-            System.err.println("\nEl cliente que intenta registrar existe ya.");
+            System.err.println("El cliente que intenta registrar existe ya.");
         }
     }
 
     /**
      * Actualizar un cliente donde se ha de escoger el campo que se desea
-     * modificar
+     * modificar.
      *
      * @param campo
      */
@@ -157,7 +223,6 @@ public class Utilidad {
         Cliente cliente = existeCliente();
 
         if (cliente != null) {
-            System.out.println("\n\t" + cliente + "\n");
             System.out.print("Indique el nuevo valor del campo: ");
             valorCampo = sc.nextLine();
 
@@ -168,18 +233,18 @@ public class Utilidad {
 
             if (resp.equalsIgnoreCase("y")) {
                 if (clientes.update(cliente.getIdCliente(), campo, valorCampo)) {
-                    System.out.println("Registro modificado.");
+                    System.out.println("\n\tRegistro modificado.");
                 } else {
-                    System.out.println("\n\tRegistro no modificado.");
+                    throw new InputMismatchException();
                 }
+            } else {
+                System.out.println("\n\tRegistro no modificado.");
             }
-        } else {
-            System.err.println("El cliente no existe o no se puede leer.");
         }
     }
 
     /**
-     * Borrar el registro de un cliente a través de su id
+     * Borrar el registro de un cliente a través de su id.
      */
     public static void borrarCliente() {
         System.out.println("\nBORRAR");
@@ -190,29 +255,19 @@ public class Utilidad {
         String resp;
 
         if (cliente != null) {
-            System.out.println("\n¿Está seguro que desea eliminar al siguiente cliente?"
-                    + "\n\n\t" + cliente + "\n");
+            System.out.println("¿Está seguro que desea eliminar al siguiente cliente?");
             System.out.print("Su respuesta [Y/N]: ");
             resp = sc.nextLine();
 
             if (resp.equalsIgnoreCase("y")) {
-                clientes.delete(cliente.getIdCliente());
-                System.out.println("\n\tEntrada eliminada.");
+                if (clientes.delete(cliente.getIdCliente())) {
+                    System.out.println("\n\tEntrada eliminada.");
+                } else {
+                    throw new InputMismatchException();
+                }
             } else {
                 System.out.println("\n\tEntrada no eliminada.");
             }
-        } else {
-            System.err.println("El empleado no existe o no se puede leer.");
         }
-    }
-
-    public static Cliente existeCliente() {
-        Scanner sc = new Scanner(System.in);
-        Cliente cliente;
-
-        System.out.print("\nIndique el ID del cliente que desea buscar: ");
-        cliente = clientes.read(Integer.parseInt(sc.nextLine()));
-
-        return cliente;
     }
 }

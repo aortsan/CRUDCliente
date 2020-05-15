@@ -5,6 +5,7 @@
  */
 package main;
 
+import java.util.InputMismatchException;
 import utilidades.Utilidad;
 import java.util.Scanner;
 
@@ -54,7 +55,7 @@ public class Main {
                         Utilidad.anterior();
                         break;
                     case 3:
-                        Utilidad.registroCompleto();
+                        Utilidad.existeCliente();
                         break;
                     case 4:
                         Utilidad.introducirCliente();
@@ -68,8 +69,8 @@ public class Main {
                     default:
                         System.out.println("Debe elegir una opción válida.");
                 }
-            } catch (NumberFormatException nfe) {
-                System.err.println("\nError: Entrada no válida. " + nfe.getMessage() + "\n");
+            } catch (InputMismatchException | NumberFormatException nfe) {
+                System.err.println("\n\tError: Entrada no válida. " + nfe.getMessage() + "\n");
             }
         }
     }
@@ -137,8 +138,8 @@ public class Main {
                     default:
                         System.out.println("Debe elegir una opción válida.");
                 }
-            } catch (NumberFormatException nfe) {
-                System.err.println("\nError: Entrada no válida. " + nfe.getMessage() + "\n");
+            } catch (InputMismatchException | NumberFormatException nfe) {
+                System.err.println("\n\tError: Entrada no válida. " + nfe.getMessage() + "\n");
             }
         }
     }

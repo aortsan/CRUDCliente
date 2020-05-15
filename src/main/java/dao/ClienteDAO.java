@@ -27,7 +27,7 @@ public class ClienteDAO {
      */
     public ClienteDAO() {
         try {
-            conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/neptuno", "root", "");
+            conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/bd_neptuno", "root", "");
         } catch (SQLException ex) {
             System.err.println("Error al conectar: " + ex.getMessage());
         }
@@ -303,7 +303,7 @@ public class ClienteDAO {
      * @return
      */
     public Boolean update(Integer id, String campo, String valorCampo) {
-        Boolean resultado = null;
+        Boolean resultado = false;
         PreparedStatement stmt = null;
 
         if (this.conexion == null || id == null || StringUtils.isBlank(campo)  
