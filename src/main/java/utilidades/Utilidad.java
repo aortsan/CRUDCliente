@@ -171,19 +171,19 @@ public class Utilidad {
         System.out.print("Indique el nombre* de la empresa [ej. Centro Europeo de Estudios Profesionales]: ");
         cliente.setEmpresa(sc.nextLine());
 
-        System.out.print("Indique el nombre* del contacto [ej. Hank Scorpio]: ");
+        System.out.print("Indique el nombre* del contacto [ej. John Doe]: ");
         cliente.setContacto(sc.nextLine());
 
         System.out.print("Indique el cargo* del contacto [ej. Representante de ventas]: ");
         cliente.setCargoContacto(sc.nextLine());
 
-        System.out.print("Indique la dirección* de la empresa [ej. Paseo de Extemadura, 11]: ");
+        System.out.print("Indique la dirección* de la empresa [ej. Paseo de Extemadura, 33]: ");
         cliente.setDireccion(sc.nextLine());
 
         System.out.print("Indique la ciudad* en la que se encuentra la empresa [ej. Madrid]: ");
         cliente.setCiudad(sc.nextLine());
 
-        System.out.print("Indique la región en la que se encuentra la empresa [ej. M]: ");
+        System.out.print("Indique la región en la que se encuentra la empresa: ");
         cliente.setRegion(sc.nextLine());
 
         System.out.print("Indique el código postal* de la empresa [ej. 28011]: ");
