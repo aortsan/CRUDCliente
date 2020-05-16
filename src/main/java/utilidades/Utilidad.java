@@ -34,11 +34,11 @@ public class Utilidad {
     }
 
     /**
-     * Visualizar los 10 registros siguientes, tomándose de referencia el último
-     * id para limitar el número de páginas.
+     * Visualizar los 10 registros siguientes, tomándose de referencia el número
+     * total de registros para limitar el número de páginas.
      */
     public static void siguiente() {
-        Integer maxPaginas = ((clientes.ultimoID()) / 10);
+        Integer maxPaginas = ((clientes.size()) / 10);
         if ((maxPaginas - 1) < (inicio / 10)) {
             inicio = maxPaginas * 10;
         } else {
@@ -69,13 +69,14 @@ public class Utilidad {
         String palabras[];
         listaClientes = clientes.listar(inicio, limite);
 
-        System.out.println("+----+-------+------------------------------+------------------------+------------------------------"
-                + "+------------------------------+---------------+----------+---------------+---------------+");
-        System.out.printf("|%-4s|%-7s|%-30s|%-24s|%-30s|%-30s|%-15s|%-10s|%-15s|%-15s|%n",
-                "Id", "Código", "Empresa", "Contacto", "Cargo", "Dirección", "Ciudad", "C.Postal", "País", "Teléfono");
-        System.out.println("+----+-------+------------------------------+------------------------+------------------------------"
-                + "+------------------------------+---------------+----------+---------------+---------------+");
-
+        System.out.println("+---+------+------------------------------------+------------------------+------------------------------"
+                + "+------------------------------+---------------+---------------+---------------+");
+        System.out.printf("|%-3s|%-6s|%-14s%-22s|%-8s%-16s|%-12s%-18s|%-11s%-19s|%-4s%-11s|%-5s%-10s|%-3s%-12s|%n",
+                "Id", "Código", "", "Empresa", "","Contacto","", "Cargo", "","Dirección","", "Ciudad", "", "País","", 
+                "Teléfono");
+        System.out.println("+---+------+------------------------------------+------------------------+------------------------------"
+                + "+------------------------------+---------------+---------------+---------------+");
+        
         for (Cliente c : listaClientes) {
             palabras = c.getDireccion().split("\\r?\\n");
 
@@ -84,14 +85,15 @@ public class Utilidad {
             } else {
                 c.setDireccion(palabras[0]);
             }
-
-            System.out.printf("|%-4d|%-7.7s|%-30.28s|%-24.23s|%-30.29s|%-30.28s|%-15.14s|%-10.9s|%-15.14s|%-15.14s|%n",
+            
+            System.out.printf("|%-3d|%-6.5s|%-36.36s|%-24.23s|%-30.29s|%-30.28s|%-15.14s|%-15.14s|%-15.14s|%n",
                     c.getIdCliente(), c.getCodigoCliente(), c.getEmpresa(),
-                    c.getContacto(), c.getCargoContacto(), c.getDireccion(), c.getCiudad(),
-                    c.getCodigoPostal(), c.getPais(), c.getTelefono());
+                    c.getContacto(), c.getCargoContacto(), c.getDireccion(), c.getCiudad(), c.getPais(), c.getTelefono());
         }
-        System.out.println("+----+-------+------------------------------+------------------------+------------------------------"
-                + "+------------------------------+---------------+----------+---------------+---------------+");
+        
+        System.out.println("+---+------+------------------------------------+------------------------+------------------------------"
+                + "+------------------------------+---------------+---------------+---------------+");
+        System.out.println("**Para más información selecciona la opción 3.");
     }
     
      /**
@@ -101,7 +103,7 @@ public class Utilidad {
      */
     public static Cliente existeCliente() {
         Scanner sc = new Scanner(System.in);
-        Cliente cliente = null;
+        Cliente cliente;
 
         System.out.print("\nIndique el ID del cliente que desea buscar: ");
         cliente = clientes.read(Integer.parseInt(sc.nextLine()));
@@ -109,24 +111,29 @@ public class Utilidad {
         if(cliente != null){
             registroCompleto(cliente);
         } else {
-            System.err.println("El cliente no existe o no se puede leer.");
+            System.err.println("\n\tEl cliente no existe o no se puede leer.");
         }
         
         return cliente;
     }
     
     /**
-     * Ver el registro completo de un cliente.
+     * Ver todos los campos de un registro. Algunos campos tienen un salto 
+     * de línea, por loque con 'palabras[]' se pretende meter el contenido 
+     * separado por ese salto en un array con el que luego se juntan las 
+     * cadenas.
+     * @param cliente
      */
     public static void registroCompleto(Cliente cliente) {
         String palabras[];
 
-        System.out.println("+----+-------+-------------------------------------+-------------------------+------------------------------"
+        System.out.println("+---+------+-------------------------------------+-------------------------+------------------------------"
                 + "+------------------------------------------------+---------------+---------------+----------+---------------+---------------+"
                 + "---------------+");
-        System.out.printf("|%-4s|%-7s|%-37s|%-25s|%-30s|%-48s|%-15s|%-15s|%-10s|%-15s|%-15s|%-15s|%n",
-                "Id", "Código", "Empresa", "Contacto", "Cargo", "Dirección", "Ciudad", "Región", "C.Postal", "País", "Teléfono", "Fax");
-        System.out.println("+----+-------+-------------------------------------+-------------------------+------------------------------"
+        System.out.printf("|%-3s|%-6s|%-15s%-22s|%-9s%-16s|%-12s%-18s|%-20s%-28s|%-4s%-11s|%-5s%-10s|%-10s|%-5s%-10s|%-3s%-12s|%-5s%-10s|%n",
+                "Id", "Código", "", "Empresa", "","Contacto","", "Cargo", "","Dirección","", "Ciudad","", "Región", " C.Postal","", "País","", 
+                "Teléfono","", "Fax");
+        System.out.println("+---+------+-------------------------------------+-------------------------+------------------------------"
                 + "+------------------------------------------------+---------------+---------------+----------+---------------+---------------+"
                 + "---------------+");
 
@@ -138,11 +145,11 @@ public class Utilidad {
             cliente.setDireccion(palabras[0]);
         }
 
-        System.out.printf("|%-4d|%-7s|%-37s|%-25s|%-30s|%-48s|%-15s|%-15s|%-10s|%-15s|%-15s|%-15s|%n",
+        System.out.printf("|%-3d|%-6s|%-37s|%-25s|%-30s|%-48s|%-15s|%-15s|%-10s|%-15s|%-15s|%-15s|%n",
                 cliente.getIdCliente(), cliente.getCodigoCliente(), cliente.getEmpresa(),
                 cliente.getContacto(), cliente.getCargoContacto(), cliente.getDireccion(), cliente.getCiudad(), cliente.getRegion(),
                 cliente.getCodigoPostal(), cliente.getPais(), cliente.getTelefono(), cliente.getFax());
-        System.out.println("+----+-------+-------------------------------------+-------------------------+------------------------------"
+        System.out.println("+---+------+-------------------------------------+-------------------------+------------------------------"
                 + "+------------------------------------------------+---------------+---------------+----------+---------------+---------------+"
                 + "---------------+");
     }
@@ -158,50 +165,51 @@ public class Utilidad {
         System.out.println("--------");
         System.out.println("Los campos indicados con asterisco (*) son OBLIGATORIOS.\n");
 
-        System.out.print("Indique el código de la empresa [ej.VERDE]*: ");
+        System.out.print("Indique el código* de la empresa [ej.CEEP]: ");
         cliente.setCodigoCliente(sc.nextLine().toUpperCase());
 
-        System.out.print("Indique el nombre de la empresa [ej. Verduras Deliciosas]*: ");
+        System.out.print("Indique el nombre* de la empresa [ej. Centro Europeo de Estudios Profesionales]: ");
         cliente.setEmpresa(sc.nextLine());
 
-        System.out.print("Indique el nombre del contacto [ej. Hank Scorpio]*: ");
+        System.out.print("Indique el nombre* del contacto [ej. Hank Scorpio]: ");
         cliente.setContacto(sc.nextLine());
 
-        System.out.print("Indique el cargo del contacto [ej. Representante de ventas]*: ");
+        System.out.print("Indique el cargo* del contacto [ej. Representante de ventas]: ");
         cliente.setCargoContacto(sc.nextLine());
 
-        System.out.print("Indique la dirección de la empresa [ej. Paseo de Extemadura 11]*: ");
+        System.out.print("Indique la dirección* de la empresa [ej. Paseo de Extemadura, 11]: ");
         cliente.setDireccion(sc.nextLine());
 
-        System.out.print("Indique la ciudad en la que se encuentra la empresa [ej. Madrid]*: ");
+        System.out.print("Indique la ciudad* en la que se encuentra la empresa [ej. Madrid]: ");
         cliente.setCiudad(sc.nextLine());
 
         System.out.print("Indique la región en la que se encuentra la empresa [ej. M]: ");
         cliente.setRegion(sc.nextLine());
 
-        System.out.print("Indique el código postal de la empresa [ej. 28034]*: ");
+        System.out.print("Indique el código postal* de la empresa [ej. 28011]: ");
         cliente.setCodigoPostal(sc.nextLine());
 
-        System.out.print("Indique el país de la empresa [ej. Alemania]*: ");
+        System.out.print("Indique el país* de la empresa [ej. España]*: ");
         cliente.setPais(sc.nextLine());
 
-        System.out.print("Indique el teléfono de la empresa [ej. 913722473]*: ");
+        System.out.print("Indique el teléfono* de la empresa [ej. 915266116]: ");
         cliente.setTelefono(sc.nextLine());
 
         System.out.print("Indique el fax de la empresa: ");
         cliente.setFax(sc.nextLine());
 
-        /*Aquellos campos obligatorios que no se han introducido pasarán a ser
-        nulo*/
+        /*Aquellos campos no obligatorios que no se han introducido pasarán 
+        a ser nulos*/
         cliente.setNull();
         
-        //salto de línea con propósito estético
+        //Salto de línea meramente estético
         System.out.println("");
         
-        if (!clientes.existe(cliente.getCodigoCliente(), cliente.getEmpresa())) {
+        if (clientes.read(cliente) == null) {
             if (clientes.insertar(cliente)) {
-                System.out.println("El cliente '" + cliente.getEmpresa() + "' ha sido añadido satisfactoriamente.");
-                registroCompleto(clientes.read(clientes.ultimoID()));
+                System.out.println("El cliente '" + cliente.getEmpresa() + "' "
+                        + "ha sido añadido satisfactoriamente.");
+                registroCompleto(clientes.read(cliente));
             } else {
                 System.err.println("El cliente que intenta introducir no es válido.");
             }
@@ -223,7 +231,7 @@ public class Utilidad {
         Cliente cliente = existeCliente();
 
         if (cliente != null) {
-            System.out.print("Indique el nuevo valor del campo: ");
+            System.out.print("Indique el nuevo valor del campo '"+ campo + "': ");
             valorCampo = sc.nextLine();
 
             System.out.println("\n¿Está seguro que desea actualizar al siguiente cliente?"

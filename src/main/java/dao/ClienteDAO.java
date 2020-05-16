@@ -38,11 +38,11 @@ public class ClienteDAO {
     }
 
     /**
-     * Obtener el último id de la tabla
+     * Obtener el número de registros de la tabla.
      *
      * @return
      */
-    public Integer ultimoID() {
+    public Integer size() {
         PreparedStatement stmt = null;
         Integer ultimoId = null;
 
@@ -51,13 +51,13 @@ public class ClienteDAO {
         }
 
         try {
-            String query = "SELECT MAX(id) FROM clientes";
+            String query = "SELECT COUNT(*) FROM clientes";
             stmt = conexion.prepareStatement(query);
 
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                ultimoId = rs.getInt("MAX(id)");
+                ultimoId = rs.getInt("COUNT(*)");
             }
 
         } catch (SQLException e) {
@@ -83,16 +83,17 @@ public class ClienteDAO {
      * @return
      */
     public ArrayList<Cliente> listar(Integer inicio, Integer limite) {
-        ArrayList<Cliente> listaClientes = new ArrayList<>();
+        ArrayList<Cliente> listaClientes = null;
         PreparedStatement stmt = null;
 
-        if (this.conexion == null || inicio == null || limite == null) {
+        if (this.conexion == null || inicio == null || limite == null){
             return listaClientes;
         }
 
         try {
             String query = "SELECT * FROM clientes ORDER BY id LIMIT ? OFFSET ?";
-
+            listaClientes = new ArrayList<>();
+            
             stmt = conexion.prepareStatement(query);
             stmt.setInt(1, limite);
             stmt.setInt(2, inicio);
@@ -184,47 +185,39 @@ public class ClienteDAO {
 
         return cliente;
     }
-
-    /**
-     * Comprobar que el cliente existe a partir de su código o nombre
-     *
-     * @param codigo
-     * @param empresa
-     * @return
-     */
-    public Boolean existe(String codigo, String empresa) {
-        Boolean resultado = false;
+    
+    public Cliente read(Cliente cliente) {
+        Cliente clienteBD = null;
         PreparedStatement stmt = null;
 
-        if (this.conexion == null || StringUtils.isBlank(codigo)
-                || StringUtils.isBlank(empresa)) {
-            return resultado;
+        if (this.conexion == null || cliente.isBlank()) {
+            return clienteBD;
         }
 
         try {
-            String query = "SELECT * FROM clientes WHERE codigo = ? OR empresa = ?";
+            String query = "SELECT * FROM clientes WHERE codigo = ? "
+                    + "AND empresa = ?";
             stmt = conexion.prepareStatement(query);
-            stmt.setString(1, codigo);
-            stmt.setString(2, empresa);
+            stmt.setString(1, cliente.getCodigoCliente());
+            stmt.setString(2, cliente.getEmpresa());
 
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-//                cliente = new Cliente(
-//                        rs.getInt("id"),
-//                        rs.getString("codigo"),
-//                        rs.getString("empresa"),
-//                        rs.getString("contacto"),
-//                        rs.getString("cargo_contacto"),
-//                        rs.getString("direccion"),
-//                        rs.getString("ciudad"),
-//                        rs.getString("region"),
-//                        rs.getString("cp"),
-//                        rs.getString("pais"),
-//                        rs.getString("telefono"),
-//                        rs.getString("fax")
-//                );
-                resultado = true;
+                clienteBD = new Cliente(
+                        rs.getInt("id"),
+                        rs.getString("codigo"),
+                        rs.getString("empresa"),
+                        rs.getString("contacto"),
+                        rs.getString("cargo_contacto"),
+                        rs.getString("direccion"),
+                        rs.getString("ciudad"),
+                        rs.getString("region"),
+                        rs.getString("cp"),
+                        rs.getString("pais"),
+                        rs.getString("telefono"),
+                        rs.getString("fax")
+                );
             }
 
         } catch (SQLException e) {
@@ -239,7 +232,7 @@ public class ClienteDAO {
             }
         }
 
-        return resultado;
+        return clienteBD;
     }
 
     /**

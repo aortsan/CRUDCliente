@@ -78,7 +78,7 @@ public class Main {
     public static void menuActualizar() {
         Scanner sc = new Scanner(System.in);
         Integer opcion;
-
+        
         while (true) {
             try {
                 System.out.println("\nACTUALIZAR");
